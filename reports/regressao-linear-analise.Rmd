@@ -1,0 +1,55 @@
+---
+title: "Hathaway, de Genovia à Gotham."
+author: "Mateus de Lima Oliveira"
+date: "13 de maio de 2019"
+output:
+  html_document:
+    code_folding: "hide"
+    toc: yes
+    toc_depth: 5
+    toc_float:
+      collapsed: no
+    df_print: paged
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+theme_set(theme_bw())
+library(boot)
+library(broom)
+knitr::opts_chunk$set(tidy = FALSE,
+                      fig.width = 6,
+                      fig.height = 5)
+```
+
+```{r read}
+titanic = read_csv(here::here("data/train.csv"), 
+                 col_types = "dddccdddcdcc") 
+startups = read_csv(here::here("data/50_Startups.csv"),
+                 col_types = "dddcd")
+
+titanic
+startups
+
+```
+
+
+### Plots
+
+
+```{r}
+titanic %>%
+    filter(Survived==1)%>%
+    ggplot()+
+    geom_bar(aes(x = Sex, fill = Sex))
+
+
+```
+
+```{r}
+startups %>%
+    ggplot()+
+    geom_point(aes(x = Marketing, y = Profit, color = State))
+
+```
+
