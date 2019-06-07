@@ -17,6 +17,7 @@ library(tidyverse)
 theme_set(theme_bw())
 library(boot)
 library(broom)
+options(scipen = 999)
 knitr::opts_chunk$set(tidy = FALSE,
                       fig.width = 6,
                       fig.height = 5)
@@ -38,18 +39,15 @@ startups
 
 
 ```{r}
-titanic %>%
-    filter(Survived==1)%>%
-    ggplot()+
-    geom_bar(aes(x = Sex, fill = Sex))
-
-
-```
-
-```{r}
 startups %>%
-    ggplot()+
-    geom_point(aes(x = Marketing, y = Profit, color = State))
+    summarise(pearson = cor(Marketing, Profit, method = "pearson"))
+    
+startups %>%
+    ggplot(aes(x = Marketing, y = Profit))+
+    geom_point(aes( size = ReD, alpha = 0.4))+
+    labs(title = "Correlação entre Lucro e gasto com Marketing",
+       y = "Lucro", x = "Marketing",
+       caption = "Fonte: vozes da minha cabeça")
 
 ```
 
