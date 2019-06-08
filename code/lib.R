@@ -32,11 +32,6 @@ theme_report <- function(base_size = 11,
 }
 
 read_imported_data <- function(){
-    read_csv(here::here("data/movies.csv"), 
-             col_types = "iccdi") %>% 
-        rename(filme = TITLE,
-               avaliacao = RATING, 
-               bilheteria = BOXOFFICE,
-               ano = YEAR, 
-               papel = CREDIT)
+    read_csv(here::here("data/50_startups.csv"),
+            col_types = "iccdi")
 }
