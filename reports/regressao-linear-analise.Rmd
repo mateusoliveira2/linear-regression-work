@@ -1,6 +1,6 @@
 ---
-title: "Hathaway, de Genovia à Gotham."
-author: "Mateus de Lima Oliveira"
+title: ""
+author: "Fanny Batista Vieira, Marcus Vinícius de Farias Barbosa e Mateus de Lima Oliveira"
 date: "13 de maio de 2019"
 output:
   html_document:
@@ -12,42 +12,99 @@ output:
     df_print: paged
 ---
 
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-library(tidyverse)
-theme_set(theme_bw())
-library(boot)
-library(broom)
-options(scipen = 999)
-knitr::opts_chunk$set(tidy = FALSE,
-                      fig.width = 6,
-                      fig.height = 5)
-```
-
-```{r read}
-titanic = read_csv(here::here("data/train.csv"), 
-                 col_types = "dddccdddcdcc") 
-startups = read_csv(here::here("data/50_Startups.csv"),
-                 col_types = "dddcd")
-
-titanic
-startups
-
-```
-
-
-### Plots
-
+## Pergunta a ser respondida: Quais departamentos quando investidos interferem no lucro das startups ?
 
 ```{r}
-startups %>%
-    summarise(pearson = cor(Marketing, Profit, method = "pearson"))
-    
-startups %>%
-    ggplot(aes(x = Marketing, y = Profit))+
-    geom_point(aes( size = ReD, alpha = 0.4))+
-    labs(title = "Correlação entre Lucro e gasto com Marketing",
-       y = "Lucro", x = "Marketing",
-       caption = "Fonte: vozes da minha cabeça")
+library(tidyverse)
+options(scipen = 999)
+
+dataset = read_csv(here::here("data/50_startups.csv"),
+                 col_types = "dddcd")
+```
+
+## Análise Descritiva
+
+### Visualização dos dados
+OBS: Inserir Heatmap
+
+```{r}
+library(ggplot2)
+ggplot(data = dataset) +
+  geom_point(aes(x = Administration, y = Profit, color = State)) +
+  facet_grid(State ~ .) +
+  ggtitle('Administration Spend X Profit')
+
+ggplot(data = dataset) +
+  geom_point(aes(x = Marketing, y = Profit, color = State)) +
+  facet_grid(State ~ .) +
+  ggtitle('Marketing Spend X Profit')
+
+ggplot(data = dataset) +
+  geom_point(aes(x = ReD, y = Profit, color = State)) +
+  facet_grid(State ~ .) +
+  ggtitle('ReD Spend X Profit')
+
+ggplot(data = dataset) +
+  geom_bar(aes(State, fill = State)) +
+  ggtitle('Administration X Profit')
+
+ggplot(data = dataset) +
+  geom_point(aes(x = State, y = Profit, color = State))
 
 ```
+
+### Análise da Correlação
+
+```{r}
+cor(dataset$Administration, dataset$Profit)
+cor(dataset$Marketing, dataset$Profit)
+cor(dataset$ReD, dataset$Profit)
+```
+
+## Modelo de Regressão e Análise da Variância (ANOVA)
+
+### Backward Elimination
+
+```{r}
+regressor = lm(formula = Profit ~ Administration + Marketing + ReD, data = dataset)
+summary(regressor)
+
+regressor = lm(formula = Profit ~ Administration + ReD, data = dataset)
+summary(regressor)
+
+regressor = lm(formula = Profit ~ ReD, data = dataset)
+summary(regressor)
+```
+### ANOVA
+
+#### Função para análise de variância
+```{r}
+anova(regressor)
+anovaTest = aov(regressor, data = dataset)
+summary(anovaTest)
+```
+
+## Análise de Resíduos
+
+OBS: análise de normalidade, independências e homogeneidade das variâncias (resíduos)
+
+#### Teste de normalidade (a normalidade é alcançada com um valor de p > 0,05)
+shapiro.test(resid(regressor))
+ 
+#carregar pacote para rodar a função do teste para homogeneidade das variâncias
+#Caso não tenho instalado é só digitar: install.packages("car")
+library(car)
+ 
+#### Teste da homogeneidade das variâncias (a homogeneidade é alcançada com valores acima de p acima de 0,05)
+leveneTest(regressor, data = dataset)
+ 
+#### O resultado da ANOVA foi significativo a um p < 0,05, ou seja, é necessário realizar um teste post-hoc para verificar quais grupos diferem entre si
+ 
+#### Teste de Tukey
+TukeyHSD(anova)
+ 
+#### Caso queira visualizar o gráfico
+boxplot(Abundancia~Ambiente,data=teste)
+
+## Interpretação do modelo
 
