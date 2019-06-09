@@ -61,27 +61,57 @@ cor(dataset$Marketing, dataset$Profit)
 cor(dataset$ReD, dataset$Profit)
 ```
 
-## Modelo de Regressão e Análise da Variância (ANOVA)
+## Modelo de Regressão
 
-### Backward Elimination
+### Preprocessamento dos dados
+
+Antes de analisar os modelos que se adequam à problemática proposta, é necessário adaptar as variáveis que não são do tipo númerico, pois sem isto, elas não podem ser consideradas como parâmetros dos modelos de uma regressão linear.
+
+A variável adaptada é a Estado, que pode possuir três valores categóricos: New York, California e Florida. Desse modo, ela foi transformada para receber respectivamente os valores 1, 2 e 3, possibilitando sua inclusão nos modelos construídos.
 
 ```{r}
-regressor = lm(formula = Profit ~ Administration + Marketing + ReD, data = dataset)
-summary(regressor)
+dataset$State = factor(dataset$State,
+                       levels = c('New York', 'California', 'Florida'),
+                       labels = c(1, 2, 3))
+```
 
-regressor = lm(formula = Profit ~ Administration + ReD, data = dataset)
-summary(regressor)
+É necessário também dividir o conjunto de dados, em dois conjuntos: de treinamento e de teste. O conjunto de dados de treinamento é utilizado para construir e treinar o modelo, já o de testes é utilizado para verificar o quão acertivo está o modelo.
+Forma utilizados 80% dos dados para o conjunto de treinamento e 20% para o conjunto de teste.
 
-regressor = lm(formula = Profit ~ ReD, data = dataset)
+```{r}
+library(caTools)
+set.seed(100)
+split = sample.split(dataset$Profit, SplitRatio = 0.8)
+
+training_set = subset(dataset, split == TRUE)
+test_set = subset(dataset, split == FALSE)
+```
+
+### Encontrando o melhor modelo
+
+A fim de encontrar o melhor modelo é utilizada a técnica Backward Elimination. Através da qual é criado um primeiro modelo considerando todas as variáveis independentes, e a partir disso vão sendo excluídas, uma por uma, as variáveis que não são relevantes para predição.
+
+```{r}
+regressor = lm(formula = Profit ~ .,
+               data = training_set)
 summary(regressor)
 ```
-### ANOVA
-
-#### Função para análise de variância
 ```{r}
-anova(regressor)
-anovaTest = aov(regressor, data = dataset)
-summary(anovaTest)
+regressor = lm(formula = Profit ~ Marketing + ReD + State,
+               data = training_set)
+summary(regressor)
+```
+```{r}
+regressor = lm(formula = Profit ~ Marketing + ReD,
+               data = training_set)
+summary(regressor)
+```
+Modelo em que todos os estimadores dos parâmetros foram significativos.
+
+```{r}
+regressor = lm(formula = Profit ~ ReD,
+               data = training_set)
+summary(regressor)
 ```
 
 ## Análise de Resíduos
