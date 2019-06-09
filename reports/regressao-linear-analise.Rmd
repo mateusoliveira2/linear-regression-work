@@ -116,12 +116,35 @@ summary(regressor)
 
 ## Análise de Resíduos
 
+Os resíduos representam as diferenças entre os valores do fenômeno que estamos observando, no nosso caso, são os valores que observamos no dataset. E os valores estimados, a partir do nosso modelo. De modo formal, um resíduo pode ser obtido pela seguinte fórmula:
+
+```
+    ei = yi - yi'
+```
+
+onde:  
+ei -> indica o iésimo erro  
+yi -> indica o iésimo valor observado  
+yi'-> indica o iésimo valor estimado  
+
+A análise dos resíduos, consiste em validar se o modelo adotado, de fato, é adequado para o contexto do problema, baseado nas suposições feitas para os dados, são elas: 
+
+ - **Linearidade**: Esperamos que os dados tenham uma relação linear.  
+ - **Normalidade**: Os resíduos devem seguir a distribuição normal, com média igual a 0 e variância constante.  
+ - **Homogeneidade**: Os resíduos devem variar na mesma proporção. Desta forma, cada um contribui de forma igual para a soma dos quadrados.  
+ - **Independência**: Um resíduo não deve influenciar o outro, essa suposição, garante que os dados foram coletados de modo aleatório no espaço amostral.
+
+
+No gráfico abaixo, vemos os valores observados, representados pelos círculos ao longo da reta, os valores estimados, indicados pelos círculos coloridos maiores, e os resíduos, que são as linhas entre os valores estimados e os observados.
+
+A partir dele, conseguimos visualizar a existência da relação linear entre as variáveis, e como o modelo consegue explicar boa parte dos dados, conforme visto utilizando a estatística `R²`, que teve valor igual a 94%, demonstrando assim, que conseguimos explicar 94% dos dados.
+
 
 ```{r}
 predicoes = predict(regressor)
 residuos = residuals(regressor)
 
-ggplot(dataset, aes(x = ReD, y = Profit)) +
+ggplot(training_set, aes(x = ReD, y = Profit)) +
   geom_smooth(method = "lm", se = FALSE, color = "lightgrey") +     # regression line  
   geom_segment(aes(xend = ReD, yend = predicoes), alpha = .2) +     # draw line from point to line
   geom_point(aes(color = abs(residuos), size = abs(residuos))) +    # size of the points
