@@ -87,6 +87,27 @@ summary(anovaTest)
 ## Análise de Resíduos
 
 OBS: análise de normalidade, independências e homogeneidade das variâncias (resíduos)
+```{r}
+dataset$predicted <- predict(regressor)
+dataset$residuals <- residuals(regressor)
+
+ggplot(dataset, aes(x = ReD, y = Profit)) +
+  geom_smooth(method = "lm", se = FALSE, color = "lightgrey") +     # regression line  
+  geom_segment(aes(xend = ReD, yend = predicted), alpha = .2) +      # draw line from point to line
+  geom_point(aes(color = abs(residuals), size = abs(residuals))) +  # size of the points
+  scale_color_continuous(low = "green", high = "red") +             # colour of the points mapped to residual size - green smaller, red larger
+  guides(color = FALSE, size = FALSE) +                             # Size legend removed
+  geom_point(aes(y = predicted), shape = 1) +
+  theme_bw()
+```
+
+```{r}
+plot(regressor, which=2, col=c("red"))
+```
+
+```{r}
+plot(regressor, which=3, col=c("blue"))  # Scale-Location Plot
+```
 
 #### Teste de normalidade (a normalidade é alcançada com um valor de p > 0,05)
 shapiro.test(resid(regressor))
