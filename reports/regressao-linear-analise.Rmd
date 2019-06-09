@@ -86,10 +86,11 @@ summary(anovaTest)
 
 ## Análise de Resíduos
 
-OBS: análise de normalidade, independências e homogeneidade das variâncias (resíduos)
+### Teste da linearidade
+
 ```{r}
-dataset$predicted <- predict(regressor)
-dataset$residuals <- residuals(regressor)
+dataset$predicted = predict(regressor)
+dataset$residuals = residuals(regressor)
 
 ggplot(dataset, aes(x = ReD, y = Profit)) +
   geom_smooth(method = "lm", se = FALSE, color = "lightgrey") +     # regression line  
@@ -101,31 +102,28 @@ ggplot(dataset, aes(x = ReD, y = Profit)) +
   theme_bw()
 ```
 
+### Teste de normalidade
+
 ```{r}
 plot(regressor, which=2, col=c("red"))
 ```
-
 ```{r}
-plot(regressor, which=3, col=c("blue"))  # Scale-Location Plot
+shapiro.test(resid(regressor))
 ```
 
-#### Teste de normalidade (a normalidade é alcançada com um valor de p > 0,05)
-shapiro.test(resid(regressor))
- 
-#carregar pacote para rodar a função do teste para homogeneidade das variâncias
-#Caso não tenho instalado é só digitar: install.packages("car")
-library(car)
- 
-#### Teste da homogeneidade das variâncias (a homogeneidade é alcançada com valores acima de p acima de 0,05)
-leveneTest(regressor, data = dataset)
- 
-#### O resultado da ANOVA foi significativo a um p < 0,05, ou seja, é necessário realizar um teste post-hoc para verificar quais grupos diferem entre si
- 
-#### Teste de Tukey
-TukeyHSD(anova)
- 
-#### Caso queira visualizar o gráfico
-boxplot(Abundancia~Ambiente,data=teste)
+The null-hypothesis of this test is that the population is normally distributed. Thus, on the one hand, if the p value is less than the chosen alpha level, then the null hypothesis is rejected and there is evidence that the data tested are not normally distributed. On the other hand, if the p value is greater than the chosen alpha level, then the null hypothesis that the data came from a normally distributed population can not be rejected (e.g., for an alpha level of .05, a data set with a p value of less than .05 rejects the null hypothesis that the data are from a normally distributed population).
 
-## Interpretação do modelo
+### Teste da homogeinidade
+
+```{r}
+plot(regressor, which=1, col=c("blue"))  # Scale-Location Plot
+```
+
+```{r}
+library(lmtest)
+bptest(regressor)
+```
+
+### Teste da independência
+
 
