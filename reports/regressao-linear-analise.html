@@ -460,6 +460,24 @@ summary(anovaTest)</code></pre>
 </div>
 <div id="analise-de-residuos" class="section level2">
 <h2>Análise de Resíduos</h2>
+<p>Os resíduos representam as diferenças entre os valores do fenômeno que estamos observando, no nosso caso, são os valores que observamos no dataset. E os valores estimados, a partir do nosso modelo. De modo formal, um resíduo pode ser obtido pela seguinte fórmula:</p>
+<pre><code>    ei = yi - yi'</code></pre>
+<p>onde:<br />
+ei -&gt; indica o iésimo erro<br />
+yi -&gt; indica o iésimo valor observado<br />
+yi’-&gt; indica o iésimo valor estimado</p>
+<p>A análise dos resíduos, consiste em validar se o modelo adotado, de fato, é adequado para o contexto do problema, baseado nas suposições feitas para os dados, são elas:</p>
+<ul>
+<li><strong>Linearidade</strong>: Esperamos que o dados tenha uma relação linear.<br />
+</li>
+<li><strong>Normalidade</strong>: Os resíduos devem ter seguir a distribuição normal, com média igual a 0 e variância constante.<br />
+</li>
+<li><strong>Homogeneidade</strong>: Os resíduos devem variar na mesma proporção. Desta forma, cada um contribui de forma igual para a soma dos quadrados.<br />
+</li>
+<li><strong>Independência</strong>: Um resíduo não deve influenciar o outro, essa suposição, garante que os dados foram coletados de modo aleatório no espaço amostral.<br />
+No gráfico abaixo, vemos os valores observados, representados pelas bolinhas menores ao longo da reta, e os valores estimados, indicados por bolas, nas cores verde e laranja, além disso, temos os resíduos, sendo representados pela linha entre a reta e os valores estimados.</li>
+</ul>
+<p>A partir dele, já conseguimos visualizar a existência da relação linear entre as variáveis, e como o modelo, consegue explicar boa parte dos dados, como foi visto utilizado a estatística <code>R²</code>, que teve valor igual a 94%, demonstrando assim, que conseguimos explicar 94% dos dados.</p>
 <pre class="r"><code>predicoes = predict(regressor)
 residuos = residuals(regressor)
 
@@ -522,7 +540,7 @@ ggplot(dataset, aes(x = ReD, y = Profit)) +
 ##     some</code></pre>
 <pre class="r"><code>durbinWatsonTest(regressor)</code></pre>
 <pre><code>##  lag Autocorrelation D-W Statistic p-value
-##    1       0.3029576      1.115912       0
+##    1       0.3029576      1.115912   0.002
 ##  Alternative hypothesis: rho != 0</code></pre>
 </div>
 </div>
