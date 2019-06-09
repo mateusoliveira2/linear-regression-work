@@ -98,7 +98,12 @@ ggplot(data = dataset) +
 
 ```{r}
 numerical_columns = dataset[c("ReD", "Profit", "Administration", "Marketing")]
-corrplot(cor(numerical_columns),method="number")
+corrplot(cor(numerical_columns), method="color",  
+         order="hclust", 
+         addCoef.col = "black", 
+         tl.col="black", tl.srt=45, 
+         sig.level = 0.01, insig = "blank"
+         )
 ```
 
 ### Comparação de estados
