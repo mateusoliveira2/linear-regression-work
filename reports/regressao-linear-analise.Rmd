@@ -27,16 +27,17 @@ dataset = read_csv(here::here("data/50_startups.csv"),
 
 ## Analise Descritiva
 
-O investimento em determinados setores pode resultar em um resultado positivo no lucro de empresas. Para verificar isso, iremos analisar dados de 50 startups de tr·s estados americanos: Florida, California e Nova Iorque. 
+O investimento em determinados setores pode resultar em um resultado positivo no lucro de empresas. Para verificar isso, iremos analisar dados de 50 startups de tr√™s estados americanos: Florida, California e Nova Iorque. 
 
-Vamos verificar se gastos com AdministraÁ„o, P&D(Pesquisa e Desenvolvimento) e Marketing tem alguma relaÁ„o com o lucro da startup analisando suas correlaÁıes.
-Para melhorar o entendimento e analise individual, os gr·ficos  est„o divididos por estado.
+Vamos verificar se gastos com Administra√ß√£o, P&D(Pesquisa e Desenvolvimento) e Marketing tem alguma rela√ß√£o com o lucro da startup analisando suas correla√ß√µes.
+Para melhorar o entendimento e analise individual, os gr√°ficos  est√£o divididos por estado.
 
-### AdministraÁ„o
+### Administra√ß√£o
 
-Com base nas visualizaÁıess abaixo, podemos notar que h· uma dispers„o dos pontos de forma que n„o se pode afirmar que h· uma correlaÁ„o consideravel em relaÁ„o ao impacto de gastos com administraÁ„o no lucro da startup. Nos tr·s estados, existem pontos que est„o no mesmo nivel de lucro mesmo conforme o investimento em administraÁ„o cresce.
+Com base nas visualiza√ß√µes abaixo, podemos notar que h√° uma dispers√£o dos pontos de forma que n√£o se pode afirmar que h√° uma correla√ß√£o consider√°vel em rela√ß√£o ao impacto de gastos com administra√ß√£o no lucro da startup. Nos tr√™s estados, existem pontos que est√£o no mesmo nivel de lucro mesmo conforme o investimento em administra√ß√£o cresce.
 
-**CorrelaÁ„o**
+**Correla√ß√£o**
+
 ```{r}
 cor(dataset$Administration, dataset$Profit)
 ```
@@ -47,18 +48,19 @@ ggplot(data = dataset) +
     theme(legend.position="none")+
     geom_point(aes(x = Administration, y = Profit, color = State)) +
     facet_grid(State ~ .) +
-    labs(x = "AdministraÁ„o", y = "Lucro", title = "AdministraÁ„o X Lucro", subtitle =  "Analise de relaÁ„o entre gasto com adminsitraÁ„o e lucro")
+    labs(x = "Administra√ß√£o", y = "Lucro", title = "Administra√ß√£o X Lucro", subtitle =  "Analise de rela??o entre gasto com adminsitra??o e lucro")
 ```
 
 
 
 ### Marketing
 
-No marketing a situaÁ„o difere da administraÁ„o. As startups tendem a ter um maior lucro de acordo com o investimento nesse setor nos tr·s estados, pois ao passo que o valor investido cresce, os lucros tambÈm crescem.
-Observa-se pontos que fogem dos da tÍndencia, logo, h· uma correlaÁ„o consideravel entre essas duas vari·veis.
+No marketing a situa√ß√£o difere da administra√ß√£o. As startups tendem a ter um maior lucro de acordo com o investimento nesse setor nos tr√™s estados, pois ao passo que o valor investido cresce, os lucros tamb√©m crescem.
+Observa-se pontos que fogem dos da t√™ndencia, logo, h√° uma correla√ß√£o consideravel entre essas duas vari√°veis.
 
 
-**CorrelaÁ„o:**
+**Correla√ß√£o:**
+
 ```{r}
 cor(dataset$Marketing, dataset$Profit)
 ```
@@ -68,7 +70,7 @@ ggplot(data = dataset) +
     theme(legend.position="none")+
     geom_point(aes(x = Marketing, y = Profit, color = State))+
     facet_grid(State ~ .) +
-    labs(x = "Marketing", y = "Lucro", title = "Marketing X Lucro", subtitle =  "Analise de relaÁ„o entre gasto com marketing e lucro")
+    labs(x = "Marketing", y = "Lucro", title = "Marketing X Lucro", subtitle =  "Analise de rela√ß√£o entre gasto com marketing e lucro")
 ```
 
 
@@ -76,10 +78,11 @@ ggplot(data = dataset) +
 
 ### Pesquisa e Desenvolvimento
 
-Como esperado, h· uma correlaÁ„o quase linear em relaÁ„o ao lucro e investimento em pesquisa e desenvolvimento. N„o h· pontos consider·veis que saiam da tÍndencia de crescimento linar que os pontos do gr·fico seguem. 
-Com isso, esse È o setor que gera um efeito positivo mais prov·vel no lucro das startups quando comparado com Marketing e AdministraÁ„o.
+Como esperado, h√° uma correla√ß√£o quase linear em rela√ß√£o ao lucro e investimento em pesquisa e desenvolvimento. N√£o h√° pontos consider√°veis que saiam da t√™ndencia de crescimento linar que os pontos do gr√°fico seguem. 
+Com isso, esse √© o setor que gera um efeito positivo mais prov√°vel no lucro das startups quando comparado com Marketing e Administra√ß√£o.
 
-**CorrelaÁ„o:**
+**Correla√ß√£o:**
+
 ```{r}
 cor(dataset$ReD, dataset$Profit)
 ```
@@ -89,19 +92,19 @@ ggplot(data = dataset) +
     theme(legend.position="none")+
     geom_point(aes(x = ReD, y = Profit, color = State)) +
     facet_grid(State ~ .) +
-    labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "Analise de relaÁ„o entre gasto com pesquisa & desenvolvimento e lucro")
+    labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "An√°lise de rela√ß√£o entre gasto com pesquisa & desenvolvimento e lucro")
 ```
 
 ```{r}
 ggplot(data = dataset) +
     theme(legend.position="none")+
     geom_point(aes(x = ReD, y = Profit, color = State)) +
-    labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "Analise de relaÁ„o entre gasto com pesquisa & desenvolvimento e lucro")
+    labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "An√°lise de rela√ß√£o entre gasto com pesquisa & desenvolvimento e lucro")
 ```
 
 
 
-### ComparaÁ„o de estados
+### Compara√ß√£o de estados
 
 ```{r}
 ggplot(data = dataset) +
