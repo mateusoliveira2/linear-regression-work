@@ -32,15 +32,11 @@ O investimento em determinados setores pode resultar em um resultado positivo no
 Vamos verificar se gastos com Administração, P&D(Pesquisa e Desenvolvimento) e Marketing tem alguma relação com o lucro da startup analisando suas correlações.
 Para melhorar o entendimento e analise individual, os gráficos  estão divididos por estado.
 
+
 ### Administração
 
 Com base nas visualizações abaixo, podemos notar que há uma dispersão dos pontos de forma que não se pode afirmar que há uma correlação considerável em relação ao impacto de gastos com administração no lucro da startup. Nos três estados, existem pontos que estão no mesmo nivel de lucro mesmo conforme o investimento em administração cresce.
 
-**Correlação**
-
-```{r}
-cor(dataset$Administration, dataset$Profit)
-```
 
 ```{r}
 library(ggplot2)
@@ -59,11 +55,6 @@ No marketing a situação difere da administração. As startups tendem a ter um
 Observa-se pontos que fogem dos da têndencia, logo, há uma correlação consideravel entre essas duas variáveis.
 
 
-**Correlação:**
-
-```{r}
-cor(dataset$Marketing, dataset$Profit)
-```
 
 ```{r}
 ggplot(data = dataset) +
@@ -81,12 +72,6 @@ ggplot(data = dataset) +
 Como esperado, há uma correlação quase linear em relação ao lucro e investimento em pesquisa e desenvolvimento. Não há pontos consideráveis que saiam da têndencia de crescimento linar que os pontos do gráfico seguem. 
 Com isso, esse é o setor que gera um efeito positivo mais provável no lucro das startups quando comparado com Marketing e Administração.
 
-**Correlação:**
-
-```{r}
-cor(dataset$ReD, dataset$Profit)
-```
-
 ```{r}
 ggplot(data = dataset) +
     theme(legend.position="none")+
@@ -103,6 +88,13 @@ ggplot(data = dataset) +
 ```
 
 
+### Correlações
+
+```{r}
+library(corrplot)
+numerical_columns = dataset[c("ReD", "Profit", "Administration", "Marketing")]
+corrplot(cor(numerical_columns),method="number")
+```
 
 ### Comparação de estados
 
