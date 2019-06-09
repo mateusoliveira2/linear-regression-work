@@ -14,9 +14,16 @@ output:
 
 ## Pergunta a ser respondida: Quais departamentos quando investidos interferem no lucro das startups ?
 
+
 ```{r}
 library(tidyverse)
 library(ggbeeswarm)
+library(ggplot2)
+library(corrplot)
+library(caTools)
+library(lmtest)
+library(car)
+
 knitr::opts_chunk$set(tidy = FALSE, fig.width = 8, fig.height = 6, echo = TRUE)
 
 options(scipen = 999)
@@ -39,7 +46,6 @@ Com base nas visualizações abaixo, podemos notar que há uma dispersão dos po
 
 
 ```{r}
-library(ggplot2)
 ggplot(data = dataset) +
     theme(legend.position="none")+
     geom_point(aes(x = Administration, y = Profit, color = State)) +
@@ -91,7 +97,6 @@ ggplot(data = dataset) +
 ### Correlações
 
 ```{r}
-library(corrplot)
 numerical_columns = dataset[c("ReD", "Profit", "Administration", "Marketing")]
 corrplot(cor(numerical_columns),method="number")
 ```
@@ -126,7 +131,6 @@ dataset$State = factor(dataset$State,
 Forma utilizados 80% dos dados para o conjunto de treinamento e 20% para o conjunto de teste.
 
 ```{r}
-library(caTools)
 set.seed(100)
 split = sample.split(dataset$Profit, SplitRatio = 0.8)
 
@@ -261,7 +265,6 @@ plot(regressor, which=3, col=c("blue"))  # Scale-Location Plot
 Usamos o teste de Breusch Pagan, para medir numericamente se nossa suposição está correta. Ele funciona como a estatística de teste usada anteriormente, analisando o p-valor, se ele for abaixo do nosso nível de significância, podemos rejeitar a nossa hipótese. Mas da tabela abaixo, vemos que o p-valor é maior, e portanto podemos concluir que os resíduos são homogêneos.
 
 ```{r}
-library(lmtest)
 bptest(regressor)
 ```
 
@@ -269,7 +272,6 @@ bptest(regressor)
 
 
 ```{r}
-library(car)
 durbinWatsonTest(regressor)
 ```
 
