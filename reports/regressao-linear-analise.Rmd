@@ -16,50 +16,102 @@ output:
 
 ```{r}
 library(tidyverse)
+library(ggbeeswarm)
+knitr::opts_chunk$set(tidy = FALSE, fig.width = 8, fig.height = 6, echo = TRUE)
+
 options(scipen = 999)
 
 dataset = read_csv(here::here("data/50_startups.csv"),
                  col_types = "dddcd")
 ```
 
-## AnÃ¡lise Descritiva
+## Analise Descritiva
 
-### VisualizaÃ§Ã£o dos dados
-OBS: Inserir Heatmap
+O investimento em determinados setores pode resultar em um resultado positivo no lucro de empresas. Para verificar isso, iremos analisar dados de 50 startups de trás estados americanos: Florida, California e Nova Iorque. 
+
+Vamos verificar se gastos com Administração, P&D(Pesquisa e Desenvolvimento) e Marketing tem alguma relação com o lucro da startup analisando suas correlações.
+Para melhorar o entendimento e analise individual, os gráficos  estão divididos por estado.
+
+### Administração
+
+Com base nas visualizaçõess abaixo, podemos notar que há uma dispersão dos pontos de forma que não se pode afirmar que há uma correlação consideravel em relação ao impacto de gastos com administração no lucro da startup. Nos trás estados, existem pontos que estão no mesmo nivel de lucro mesmo conforme o investimento em administração cresce.
+
+**Correlação**
+```{r}
+cor(dataset$Administration, dataset$Profit)
+```
 
 ```{r}
 library(ggplot2)
 ggplot(data = dataset) +
-  geom_point(aes(x = Administration, y = Profit, color = State)) +
-  facet_grid(State ~ .) +
-  ggtitle('Administration Spend X Profit')
-
-ggplot(data = dataset) +
-  geom_point(aes(x = Marketing, y = Profit, color = State)) +
-  facet_grid(State ~ .) +
-  ggtitle('Marketing Spend X Profit')
-
-ggplot(data = dataset) +
-  geom_point(aes(x = ReD, y = Profit, color = State)) +
-  facet_grid(State ~ .) +
-  ggtitle('ReD Spend X Profit')
-
-ggplot(data = dataset) +
-  geom_bar(aes(State, fill = State)) +
-  ggtitle('Administration X Profit')
-
-ggplot(data = dataset) +
-  geom_point(aes(x = State, y = Profit, color = State))
-
+    theme(legend.position="none")+
+    geom_point(aes(x = Administration, y = Profit, color = State)) +
+    facet_grid(State ~ .) +
+    labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de relação entre gasto com adminsitração e lucro")
 ```
 
-### AnÃ¡lise da CorrelaÃ§Ã£o
+
+
+### Marketing
+
+No marketing a situação difere da administração. As startups tendem a ter um maior lucro de acordo com o investimento nesse setor nos trás estados, pois ao passo que o valor investido cresce, os lucros também crescem.
+Observa-se pontos que fogem dos da têndencia, logo, há uma correlação consideravel entre essas duas variáveis.
+
+
+**Correlação:**
+```{r}
+cor(dataset$Marketing, dataset$Profit)
+```
 
 ```{r}
-cor(dataset$Administration, dataset$Profit)
-cor(dataset$Marketing, dataset$Profit)
+ggplot(data = dataset) +
+    theme(legend.position="none")+
+    geom_point(aes(x = Marketing, y = Profit, color = State))+
+    facet_grid(State ~ .) +
+    labs(x = "Marketing", y = "Lucro", title = "Marketing X Lucro", subtitle =  "Analise de relação entre gasto com marketing e lucro")
+```
+
+
+
+
+### Pesquisa e Desenvolvimento
+
+Como esperado, há uma correlação quase linear em relação ao lucro e investimento em pesquisa e desenvolvimento. Não há pontos consideráveis que saiam da têndencia de crescimento linar que os pontos do gráfico seguem. 
+Com isso, esse é o setor que gera um efeito positivo mais provável no lucro das startups quando comparado com Marketing e Administração.
+
+**Correlação:**
+```{r}
 cor(dataset$ReD, dataset$Profit)
 ```
+
+```{r}
+ggplot(data = dataset) +
+    theme(legend.position="none")+
+    geom_point(aes(x = ReD, y = Profit, color = State)) +
+    facet_grid(State ~ .) +
+    labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "Analise de relação entre gasto com pesquisa & desenvolvimento e lucro")
+```
+
+```{r}
+ggplot(data = dataset) +
+    theme(legend.position="none")+
+    geom_point(aes(x = ReD, y = Profit, color = State)) +
+    labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "Analise de relação entre gasto com pesquisa & desenvolvimento e lucro")
+```
+
+
+
+### Comparação de estados
+
+```{r}
+ggplot(data = dataset) +
+    geom_quasirandom(aes(x = State, y = Profit, color = State, alpha = 0.3))+
+    geom_boxplot(aes(x = State, y = Profit, color = State, alpha = 0.3))+
+    labs(x = "", y = "Lucro", title = "Lucros por estados")
+
+```
+
+
 
 ## Modelo de RegressÃ£o
 
