@@ -86,8 +86,6 @@ summary(anovaTest)
 
 ## Análise de Resíduos
 
-### Teste da linearidade
-
 
 ```{r}
 predicoes = predict(regressor)
@@ -103,26 +101,36 @@ ggplot(dataset, aes(x = ReD, y = Profit)) +
   theme_bw() 
 ```
 
+### Teste da linearidade
+
+```{r}
+plot(regressor, which=1, col=c("blue"))
+```
+
+
 ### Teste de normalidade
 
 ```{r}
-plot(regressor, which=2, col=c("red"))
-```
-```{r}
-shapiro.test(resid(regressor))
+plot(regressor, which=2, col=c("blue"))
 ```
 
-The null-hypothesis of this test is that the population is normally distributed. Thus, on the one hand, if the p value is less than the chosen alpha level, then the null hypothesis is rejected and there is evidence that the data tested are not normally distributed. On the other hand, if the p value is greater than the chosen alpha level, then the null hypothesis that the data came from a normally distributed population can not be rejected (e.g., for an alpha level of .05, a data set with a p value of less than .05 rejects the null hypothesis that the data are from a normally distributed population).
+```{r}
+plot(density(residuos))
+```
+
+```{r}
+shapiro.test(residuos)
+```
 
 ### Teste da homogeinidade
 
 ```{r}
-plot(regressor, which=1, col=c("blue"))  # Scale-Location Plot
+plot(regressor, which=3, col=c("blue"))  # Scale-Location Plot
 ```
 
 ```{r}
 library(lmtest)
-bptest(regressor)
+bptest(regressor, studentize = F)
 ```
 
 ### Teste da independência
