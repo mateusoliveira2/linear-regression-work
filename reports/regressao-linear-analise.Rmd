@@ -36,13 +36,15 @@ names(dataset)[names(dataset) == 'State'] <- 'Estado'
 names(dataset)[names(dataset) == 'Profit'] <- 'Lucro'
 ```
 
+## Motivação
+
+Os dados utilizados possuem informações sobre 50 empresas. Temos cinco colunas que contêm informações sobre quanto essas empresas gastam em administração, pesquisa e desenvolvimento (P & D) e marketing, sua localização por estado e seu lucro no ano mais recente. Este conjunto de dados é anonimizado, o que significa que não sabemos os nomes dessas empresas ou qualquer outra informação de identificação.
+
+Pensamos no cenário em que seriamos contratados para analisar essas informações e criar um modelo. Precisaríamos informar a pessoa que nos contratou em que tipo de empresa faz mais sentido investir no futuro, se é na que investe mais em administração por exemplo, ou em outro setor. O nosso empregador informou que quer tomar essa decisão com base no lucro do ano passado.
+
+Para resolver esse problema, criaremos um modelo para avaliar quais departamentos de uma empresa é interessante investir, para maximizar seu lucro.
+
 ## Analise Descritiva
-
-O investimento em determinados setores pode resultar em um resultado positivo no lucro de empresas. Para verificar isso, iremos analisar dados de 50 startups de três estados americanos: Florida, California e Nova Iorque. 
-
-Vamos verificar se gastos com Administração, P&D(Pesquisa e Desenvolvimento) e Marketing tem alguma relação com o lucro da startup analisando suas correlações.
-Para melhorar o entendimento e analise individual, os gráficos estão divididos por estado.
-
 
 ### Administração
 
@@ -327,3 +329,4 @@ Para avaliar se os nossos dados são de fato independentes, usamos a estratégia
 #durbinWatsonTest(regressor)
 ```
 
+## Conclusões 

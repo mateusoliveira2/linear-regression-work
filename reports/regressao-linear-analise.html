@@ -2936,10 +2936,14 @@ names(dataset)[names(dataset) == 'Administration'] &lt;- 'Administracao'
 names(dataset)[names(dataset) == 'State'] &lt;- 'Estado'
 names(dataset)[names(dataset) == 'Profit'] &lt;- 'Lucro'</code></pre>
 </div>
+<div id="motivacao" class="section level2">
+<h2>Motivação</h2>
+<p>Os dados utilizados possuem informações sobre 50 empresas. Temos cinco colunas que contêm informações sobre quanto essas empresas gastam em administração, pesquisa e desenvolvimento (P &amp; D) e marketing, sua localização por estado e seu lucro no ano mais recente. Este conjunto de dados é anonimizado, o que significa que não sabemos os nomes dessas empresas ou qualquer outra informação de identificação.</p>
+<p>Pensamos no cenário em que seriamos contratados para analisar essas informações e criar um modelo. Precisaríamos informar a pessoa que nos contratou em que tipo de empresa faz mais sentido investir no futuro, se é na que investe mais em administração por exemplo, ou em outro setor. O nosso empregador informou que quer tomar essa decisão com base no lucro do ano passado.</p>
+<p>Para resolver esse problema, criaremos um modelo para avaliar quais departamentos de uma empresa é interessante investir, para maximizar seu lucro.</p>
+</div>
 <div id="analise-descritiva" class="section level2">
 <h2>Analise Descritiva</h2>
-<p>O investimento em determinados setores pode resultar em um resultado positivo no lucro de empresas. Para verificar isso, iremos analisar dados de 50 startups de três estados americanos: Florida, California e Nova Iorque.</p>
-<p>Vamos verificar se gastos com Administração, P&amp;D(Pesquisa e Desenvolvimento) e Marketing tem alguma relação com o lucro da startup analisando suas correlações. Para melhorar o entendimento e analise individual, os gráficos estão divididos por estado.</p>
 <div id="administracao" class="section level3">
 <h3>Administração</h3>
 <p>Com base nas visualizações abaixo, podemos notar que há uma dispersão dos pontos de forma que não se pode afirmar que há uma correlação considerável em relação ao impacto de gastos com administração no lucro da startup. Nos três estados, existem pontos que estão no mesmo nivel de lucro mesmo conforme o investimento em administração cresce.</p>
@@ -3226,6 +3230,9 @@ ggplot(training_set, aes(x = PeD, y = Lucro)) +
 <p>Para avaliar se os nossos dados são de fato independentes, usamos a estratégia do p-valor novamente, do resultado abaixo, vemos que nosso valor-p é menor que o nível de significância adotado, demonstrando assim, que os nossos resíduos estão correlacionados, fazendo-se necessário uma adequação do modelo existente.</p>
 <pre class="r"><code>#durbinWatsonTest(regressor)</code></pre>
 </div>
+</div>
+<div id="conclusoes" class="section level2">
+<h2>Conclusões</h2>
 </div>
 
 
