@@ -22,7 +22,7 @@ library(ggplot2)
 library(corrplot)
 library(caTools)
 library(lmtest)
-#library(car)
+library(car)
 
 knitr::opts_chunk$set(tidy = FALSE, fig.width = 8, fig.height = 6, echo = TRUE)
 
@@ -314,6 +314,6 @@ bptest(regressor)
 
 
 ```{r}
-#durbinWatsonTest(regressor)
+durbinWatsonTest(regressor)
 ```
 
