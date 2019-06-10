@@ -38,13 +38,11 @@ names(dataset)[names(dataset) == 'Profit'] <- 'Lucro'
 
 ## Motivação
 
-Os dados utilizados possuem informações sobre 50 empresas. Temos cinco colunas que contêm informações sobre quanto essas empresas gastam em administração, pesquisa e desenvolvimento (P & D) e marketing, sua localização por estado e seu lucro no ano mais recente. Este conjunto de dados é anonimizado, o que significa que não sabemos os nomes dessas empresas ou qualquer outra informação de identificação.
+Os dados utilizados possuem informações sobre 50 startups Temos cinco colunas que contêm informações sobre quanto essas empresas gastam em administração, pesquisa e desenvolvimento (P&D) e marketing, sua localização por estado e seu lucro no ano mais recente. Este conjunto de dados é anonimizado, o que significa que não sabemos os nomes dessas startups ou qualquer outra informação de identificação.
 
-Pensamos no cenário em que seriamos contratados para analisar essas informações e criar um modelo. Precisaríamos informar a pessoa que nos contratou em que tipo de empresa faz mais sentido investir no futuro, se é na que investe mais em administração por exemplo, ou em outro setor. O nosso empregador informou que quer tomar essa decisão com base no lucro do ano passado.
+Pensamos no cenário em que seríamos contratados para analisar essas informações e criar um modelo. Precisaríamos responder ao contratante em quais departamentos da empresa deveria-se investir para se obter um maior lucro, por exemplo em administração, ou em outro O nosso empregador informou que quer tomar essa decisão com base no lucro do ano passado.
 
-Para resolver esse problema, criaremos um modelo para avaliar quais departamentos de uma empresa é interessante investir, para maximizar seu lucro.
-
-## Analise Descritiva
+Para resolver esse problema, criaremos um modelo para avaliar quais departamentos de uma startup são interessantes para se investir, a fim maximizar seu lucro.
 
 ### Administração
 
@@ -59,14 +57,10 @@ ggplot(data = dataset) +
     labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de relação entre gasto com administração e o lucro")
 ```
 
-
-
 ### Marketing
 
 No marketing a situação difere da administração. As startups tendem a ter um maior lucro de acordo com o investimento nesse setor nos três estados, pois ao passo que o valor investido cresce, os lucros também crescem.
 Observa-se pontos que fogem dos da têndencia, logo, há uma correlação consideravel entre essas duas variáveis.
-
-
 
 ```{r}
 ggplot(data = dataset) +
@@ -75,9 +69,6 @@ ggplot(data = dataset) +
     facet_grid(Estado ~ .) +
     labs(x = "Marketing", y = "Lucro", title = "Marketing X Lucro", subtitle =  "Analise de relação entre gasto com marketing e lucro")
 ```
-
-
-
 
 ### Pesquisa e Desenvolvimento
 
@@ -98,7 +89,6 @@ ggplot(data = dataset) +
     geom_point(aes(x = PeD, y = Lucro, color = Estado)) +
     labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "Análise de relação entre gasto com pesquisa & desenvolvimento e lucro")
 ```
-
 
 ### Correlações
 
@@ -219,7 +209,7 @@ Além disso, o estudo inicialmente tinha como objetivo encontrar um modelo de re
 
 ## Análise de Resíduos
 
-Os resíduos representam as diferenças entre os valores do fenômeno que estamos observando, no nosso caso, são os valores que observamos no dataset. E os valores estimados, a partir do nosso modelo. De modo formal, um resíduo pode ser obtido pela seguinte fórmula:
+Os resíduos representam as diferenças entre os valores do fenômeno que estamos observando, no nosso caso, são os valores que observamos no conjunto de dados e os valores estimados a partir do modelo. De modo formal, um resíduo pode ser obtido pela seguinte fórmula:
 
 ```
     ei = yi - yi'
@@ -232,14 +222,14 @@ yi'-> indica o iésimo valor estimado
 
 A análise dos resíduos, consiste em validar se o modelo adotado, de fato, é adequado para o contexto do problema, baseado nas suposições feitas para os dados, são elas: 
 
- - **Linearidade**: Esperamos que os dados tenham uma relação linear.  
+ - **Linearidade**: Os dados devem ter uma relação linear.
  - **Normalidade**: Os resíduos devem seguir a distribuição normal, com média igual a 0 e variância constante.  
  - **Homogeneidade**: Os resíduos devem variar na mesma proporção. Desta forma, cada um contribui de forma igual para a soma dos quadrados.  
- - **Independência**: Um resíduo não deve influenciar o outro, essa suposição, garante que os dados foram coletados de modo aleatório no espaço amostral.
+ - **Independência**: Um resíduo não deve influenciar o outro. Esta suposição garante que os dados foram coletados de modo aleatório no espaço amostral.
 
-No gráfico abaixo, vemos os valores observados, representados pelos círculos ao longo da reta, os valores estimados, indicados pelos círculos coloridos maiores, e os resíduos, que são as linhas entre os valores estimados e os observados.
+No gráfico abaixo, são representados os valores observados (representados pelos círculos ao longo da reta), os valores estimados (indicados pelos círculos coloridos maiores), e os resíduos (as linhas entre os valores estimados e os observados).
 
-A partir dele, conseguimos visualizar a existência da relação linear entre as variáveis, e como o modelo consegue explicar boa parte dos dados, conforme visto utilizando a estatística `R²`, que teve valor igual a 94%, demonstrando assim, que conseguimos explicar 94% dos dados.
+A partir dele, conseguimos visualizar a existência da relação linear entre as variáveis e como o modelo consegue explicar boa parte dos dados, conforme visto utilizando a estatística `R²` (que teve valor igual a 94%), demonstrando assim, que conseguimos explicar 94% dos dados.
 
 
 ```{r}
@@ -258,8 +248,8 @@ ggplot(training_set, aes(x = PeD, y = Lucro)) +
 
 ### Teste da linearidade
 
-O gráfico abaixo, mostra se os resíduos possuem padrões de relação não lineares.
-Vemos que nossos resíduos não possuem padrões estranhos, embora possua certa curvatura, os resíduos se distribuem ao longo da reta horizontal. O que nos dá um bom indicador que nossos dados possuem relação linear.
+O gráfico abaixo, mostra se os resíduos possuem padrões de relações não lineares.
+Vemos que nossos resíduos não possuem padrões estranhos, pois mesmo embora possuam certa curvatura, os resíduos se distribuem ao longo da reta horizontal. O que nos dá um bom indicador que nossos dados possuem relação linear.
 
 
 ```{r}
@@ -269,16 +259,16 @@ plot(regressor, which=1, col=c("blue"))
 
 ### Teste de normalidade
 
-O grafico do tipo `qxq`, é um tipo de gráfico de dispersão em que dado dois conjuntos de dados, é obtido os seus quantis ordenados, e é colocado os valores do primeiro contra os do segundo, assim, se os dois conjuntos de quantis forem da mesma distribuição, veremos os pontos formando uma linha que é praticamente uma reta.
+O grafico do tipo `qxq`, é um tipo de gráfico de dispersão em que dado dois conjuntos de dados, é obtido os seus quantis ordenados. Em seguida são colocados os valores do primeiro contra os do segundo, de modo que, se os dois conjuntos de quantis forem da mesma distribuição, veremos os pontos formando uma linha que é praticamente uma reta.
 
-Dessa forma, ele auxilia a verificar se um conjunto de dados veio de alguma distribuição teórica, no nosso contexto, queremos verificar se os resíduos seguem distribuição normal, sendo assim, faremos uso dela.
+Dessa forma, ele auxilia a verificar se um conjunto de dados veio de alguma distribuição teórica. Em nosso contexto, queremos verificar se os resíduos seguem distribuição normal, sendo assim, faremos uso dela.
 
 
 ```{r}
 plot(regressor, which=2, col=c("blue"))
 ```
 
-Do gráfico acima, conseguimos concluir que nosso modelo segue a distribuição normal, tendo em vista, que os resíduos estão seguindo um bom alinhamento com a reta que o nosso modelo propõe.
+Do gráfico acima, conseguimos concluir que nosso modelo segue a distribuição normal, tendo em vista que os resíduos estão seguindo um bom alinhamento com a reta que o nosso modelo propõe.
 
 
 ```{r}
@@ -289,23 +279,23 @@ plot(density(residuos))
 shapiro.test(residuos)
 ```
 
-Além da visualização do gráfico qxq, também decidimos usar o gráfico de densidade e o teste shapiro. No gráfico da densidade, vemos que o formato, é bem similar ao da distribuição normal, só não se comporta bem para valores baixos.
+Além da visualização do gráfico qxq, também decidimos usar o gráfico de densidade e o teste de shapiro. No gráfico da densidade, vemos que o formato é bem similar ao da distribuição normal, só não se comporta bem para valores baixos.
 
-Por fim, analisamos o teste de shapiro-wilk. Para verificar se a nossa hipótese de que os resíduos seguem distribuição normal é verdadeira, analisamos o valor p. Se ele for menor que o nosso nível de significância(nesse caso, 0.05), rejeitamos a hipotese.
+Por fim, analisamos o teste de shapiro-wilk. Para verificar se a nossa hipótese de que os resíduos seguem distribuição normal é verdadeira, analisamos o valor-p. Se ele for menor que o nosso nível de significância (nesse caso 0.05), rejeitamos a hipótese.
 
-A partir do resultado acima, vemos que o valor-p é menor que o nível de significância e portanto deveríamos rejeitá-lo. Mas algo parece estranho, pelas analises visuais nossos resíduos parecem seguir uma distribuição normal, após algumas pesquisas, percebemos que o problema é porque temos dois valores muito abaixo das outras médias(nesse caso, 0), que ocorreram quando as empresas não investiram em pesquisa e desenvolvimento. 
+A partir do resultado acima, vemos que o valor-p é menor que o nível de significância e portanto deveríamos rejeitá-lo. Mas algo parece estranho, pelas análises visuais nossos resíduos parecem seguir uma distribuição normal, após algumas pesquisas, percebemos que o problema é porque temos dois valores muito abaixo das outras médias (nesse caso 0), que ocorreram quando as empresas não investiram em pesquisa e desenvolvimento. 
 
 Pelo estudado, quando os valores são muito pequenos, o coeficiente não consegue identificar bem a presença de normalidade e por isso, obtivemos esse resultado. Sendo assim, podemos afirmar que de modo geral, nossos resíduos seguem distribuição normal.
 
 
 ### Teste da homogeinidade
 
-Para verificar a homogeinidade, dos resíduos, primeiro, utilizamos o gráfico do tipo scale-location. Verificamos isso de duas formas:
+Para verificar a homogeneidade dos resíduos, primeiro utilizamos o gráfico do tipo scale-location. Verificamos isso de duas formas:
 
 1. A linha vermelha é aproximadamente horizontal. Então a magnitude média dos resíduos padronizados não está mudando muito em função dos valores ajustados.  
 2. A propagação ao redor da linha vermelha não varia com os valores ajustados. Então a variabilidade de magnitude não varia muito em função dos valores ajustados.
 
-Apesar de existir certa curvatura, no nosso gráfico, de modo geral, ele se assemelha bastante ao formato linear. Além disso, a segunda condição também consegue ser satisfeita, pois não vemos uma forte concentração dos dados, em nenhum dos lados(inferior e superior). Logo, somos levados a acreditar que nossos resíduos possuem homogeinidade.
+Apesar de existir certa curvatura no nosso gráfico, de modo geral, ele se assemelha bastante ao formato linear. Além disso, a segunda condição também consegue ser satisfeita, pois não vemos uma forte concentração dos dados, em nenhum dos lados (inferior e superior). Logo, somos levados a acreditar que nossos resíduos possuem homogeinidade.
 
 
 ```{r}
@@ -313,7 +303,7 @@ plot(regressor, which=3, col=c("blue"))  # Scale-Location Plot
 ```
 
 
-Usamos o teste de Breusch Pagan, para medir numericamente se nossa suposição está correta. Ele funciona como a estatística de teste usada anteriormente, analisando o valor-p, se ele for abaixo do nosso nível de significância, podemos rejeitar a nossa hipótese. Mas da tabela abaixo, vemos que o valor-p é maior, e portanto podemos concluir que os resíduos são homogêneos.
+Usamos o teste de Breusch Pagan, para medir numericamente se nossa suposição está correta. Ele funciona como a estatística de teste usada anteriormente: analisando o valor-p, se ele for abaixo do nosso nível de significância, podemos rejeitar a nossa hipótese. Mas a partir da tabela abaixo vemos que o valor-p é maior, e portanto, podemos concluir que os resíduos são homogêneos.
 
 ```{r}
 bptest(regressor)
@@ -321,12 +311,12 @@ bptest(regressor)
 
 ### Teste da independência
 
-Usamos a estatística Durbin-Watson para testar a presença de autocorrelação nos resíduos. A autocorrelação significa que os um resíduo está correlacionado ao outro, ou seja, um resíduo afeta o valor do outro. Quando isso ocorre, a regressão de mínimos quadrados pode subestimar o erro padrão dos coeficientes. Os erros padrão subestimados podem fazer com que seus preditores pareçam significativos quando eles não são.
+Usamos a estatística Durbin-Watson para testar a presença de autocorrelação nos resíduos. A autocorrelação significa que um resíduo possui correlação com outro, ou seja, um resíduo afeta o valor do outro. Quando isso ocorre, a regressão de mínimos quadrados pode subestimar o erro padrão dos coeficientes. Os erros padrão subestimados podem fazer com que seus preditores pareçam significativos quando eles não são.
 
-Para avaliar se os nossos dados são de fato independentes, usamos a estratégia do p-valor novamente, do resultado abaixo, vemos que nosso valor-p é menor que o nível de significância adotado, demonstrando assim, que os nossos resíduos estão correlacionados, fazendo-se necessário uma adequação do modelo existente.
+Para avaliar se os dados são de fato independentes, usamos a estratégia do valor-p novamente. A partir do resultado abaixo, vemos que o valor-p é menor que o nível de significância adotado, demonstrando assim, que os resíduos estão correlacionados, fazendo-se necessária uma adequação do modelo existente.
 
 ```{r}
-#durbinWatsonTest(regressor)
+durbinWatsonTest(regressor)
 ```
 
 ## Conclusões 
