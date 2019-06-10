@@ -50,7 +50,7 @@ ggplot(data = dataset) +
     theme(legend.position="none")+
     geom_point(aes(x = Administration, y = Profit, color = State)) +
     facet_grid(State ~ .) +
-    labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de rela??o entre gasto com adminsitra??o e lucro")
+    labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de relação entre gasto com adminsitra??o e lucro")
 ```
 
 
@@ -260,7 +260,7 @@ plot(regressor, which=1, col=c("blue"))
 
 ### Teste de normalidade
 
-O grafico do tipo `qxq`, é um tipo de gráfico de dispersão em que dado dois conjuntos de dados, é obtido os seus quantis ordenados, colocando os valores do primeiro contra os do segundo, assim, se os dois conjuntos de quantis forem da mesma distribuição, veremos os pontos formando uma linha que é praticamente reta.
+O grafico do tipo `qxq`, é um tipo de gráfico de dispersão em que dado dois conjuntos de dados, é obtido os seus quantis ordenados, e é colocado os valores do primeiro contra os do segundo, assim, se os dois conjuntos de quantis forem da mesma distribuição, veremos os pontos formando uma linha que é praticamente uma reta.
 
 Dessa forma, ele auxilia a verificar se um conjunto de dados veio de alguma distribuição teórica, no nosso contexto, queremos verificar se os resíduos seguem distribuição normal, sendo assim, faremos uso dela.
 
@@ -282,16 +282,16 @@ shapiro.test(residuos)
 
 Além da visualização do gráfico qxq, também decidimos usar o gráfico de densidade e o teste shapiro. No gráfico da densidade, vemos que o formato, é bem similar ao da distribuição normal, só não se comporta bem para valores baixos.
 
-Por fim, analisamos o teste de shapiro-wilk. Para verificar se a nossa hipótese de que os resíduos seguem distribuição normal, analisamos o valor p. Se ele for menor que o nosso nível de significância(nesse caso, 0.05), reijeitamos a hipotese.
+Por fim, analisamos o teste de shapiro-wilk. Para verificar se a nossa hipótese de que os resíduos seguem distribuição normal é verdadeira, analisamos o valor p. Se ele for menor que o nosso nível de significância(nesse caso, 0.05), rejeitamos a hipotese.
 
-A partir do resultado acima, vemos que o valor p é menor que o nível de significância e portanto deveríamos rejeitá-lo. Mas algo soa estranho, pelas analises visuais nossos resíduos parecem seguir uma distribuição normal, após algumas pesquisas, percebemos que o problema é porque temos dois valores muito abaixo das outras médias(nesse caso, 0), que ocorreram quando as empresas não investiram em pesquisa e desenvolvimento. 
+A partir do resultado acima, vemos que o valor p é menor que o nível de significância e portanto deveríamos rejeitá-lo. Mas algo parece estranho, pelas analises visuais nossos resíduos parecem seguir uma distribuição normal, após algumas pesquisas, percebemos que o problema é porque temos dois valores muito abaixo das outras médias(nesse caso, 0), que ocorreram quando as empresas não investiram em pesquisa e desenvolvimento. 
 
 Pelo estudado, quando os valores são muito pequenos, o coeficiente não consegue identificar bem a presença de normalidade e por isso, obtivemos esse resultado. Sendo assim, podemos afirmar que de modo geral, nossos resíduos seguem distribuição normal.
 
 
 ### Teste da homogeinidade
 
-Para verificar a homogeinidade, dos resíduos, primeiro, utilizamos o gráfico do tipo cale-location. Verificamos isso de duas formas:
+Para verificar a homogeinidade, dos resíduos, primeiro, utilizamos o gráfico do tipo scale-location. Verificamos isso de duas formas:
 
 1. A linha vermelha é aproximadamente horizontal. Então a magnitude média dos resíduos padronizados não está mudando muito em função dos valores ajustados.  
 2. A propagação ao redor da linha vermelha não varia com os valores ajustados. Então a variabilidade de magnitude não varia muito em função dos valores ajustados.
@@ -312,6 +312,9 @@ bptest(regressor)
 
 ### Teste da independência
 
+Usamos a estatística Durbin-Watson para testar a presença de autocorrelação nos resíduos. A autocorrelação significa que os um resíduo está correlacionado ao outro, ou seja, um resíduo afeta o valor do outro. Quando isso ocorre, a regressão de mínimos quadrados pode subestimar o erro padrão dos coeficientes. Os erros padrão subestimados podem fazer com que seus preditores pareçam significativos quando eles não são.
+
+Para avaliar se os nossos dados são de fato independentes, usamos a estratégia do p-valor novamente, do resultado abaixo, vemos que nosso p-valor é menor que o nível de significância adotado, demonstrando assim, que os nossos resíduos estão correlacionados, fazendo-se necessário uma adequação do modelo existente.
 
 ```{r}
 durbinWatsonTest(regressor)
