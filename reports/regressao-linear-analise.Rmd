@@ -12,7 +12,7 @@ output:
     df_print: paged
 ---
 
-## Pergunta a ser respondida: Quais departamentos quando investidos interferem no lucro das startups ?
+## Pergunta a ser respondida: Quais gastos interferem no lucro das startups ?
 
 
 ```{r}
@@ -22,7 +22,7 @@ library(ggplot2)
 library(corrplot)
 library(caTools)
 library(lmtest)
-library(car)
+#library(car)
 
 knitr::opts_chunk$set(tidy = FALSE, fig.width = 8, fig.height = 6, echo = TRUE)
 
@@ -113,18 +113,15 @@ ggplot(data = dataset) +
     geom_quasirandom(aes(x = State, y = Profit, color = State, alpha = 0.3))+
     geom_boxplot(aes(x = State, y = Profit, color = State, alpha = 0.3))+
     labs(x = "", y = "Lucro", title = "Lucros por estados")
-
 ```
-
-
 
 ## Modelo de Regressão
 
-### Preprocessamento dos dados
+### Pré-processamento dos dados
 
 Antes de analisar os modelos que se adequam à problemática proposta, é necessário adaptar as variáveis que não são do tipo númerico, pois sem isto, elas não podem ser consideradas como parâmetros dos modelos de uma regressão linear.
 
-A variável adaptada é a Estado, que pode possuir três valores categóricos: New York, California e Florida. Desse modo, ela foi transformada para receber respectivamente os valores 1, 2 e 3, possibilitando sua inclusão nos modelos construídos.
+A variável adaptada é a Estado, que pode assumir três valores categóricos: 'New York', 'California' e 'Florida'. Desse modo, ela foi transformada para receber respectivamente os valores 1, 2 e 3, possibilitando sua inclusão na construção do modelos.
 
 ```{r}
 dataset$State = factor(dataset$State,
@@ -132,8 +129,8 @@ dataset$State = factor(dataset$State,
                        labels = c(1, 2, 3))
 ```
 
-É necessário também dividir o conjunto de dados, em dois conjuntos: de treinamento e de teste. O conjunto de dados de treinamento é utilizado para construir e treinar o modelo, já o de testes é utilizado para verificar o quão acertivo está o modelo.
-Forma utilizados 80% dos dados para o conjunto de treinamento e 20% para o conjunto de teste.
+É necessário também dividir o conjunto de dados em dois conjuntos: de treinamento e de teste. O conjunto de dados de treinamento é utilizado para construir e treinar o modelo, já o de testes é utilizado para verificar o quão acertivo é são os modelos construídos.
+80% dos dados foram utilizados para o conjunto de treinamento e 20% para o conjunto de teste.
 
 ```{r}
 set.seed(100)
@@ -145,30 +142,71 @@ test_set = subset(dataset, split == FALSE)
 
 ### Encontrando o melhor modelo
 
-A fim de encontrar o melhor modelo é utilizada a técnica Backward Elimination. Através da qual é criado um primeiro modelo considerando todas as variáveis independentes, e a partir disso vão sendo excluídas, uma por uma, as variáveis que não são relevantes para predição.
+A fim de encontrar o melhor modelo cuja variáveis impactam na inferência do Lucro, é utilizada a técnica Backward Elimination. Esta técnica é aplicada através dos seguintes passos:
+
+1) Define-se o nível de significância;
+2) Ajusta-se o modelo com todas as variáveis independentes possíveis;
+3) Considera-se a variável com maior valor p;
+4) Se o valor p é maior que o nível de significância, remove-se a variável; 
+5) Ajusta-se novamente o modelo, agora sem a variável removida.
+
+
+#### Modelo 1
+
+Neste primeiro modelo consideramos todas as variáveis independentes: Administracao, PeD, Marketing, e Estado.
 
 ```{r}
 regressor = lm(formula = Profit ~ .,
                data = training_set)
 summary(regressor)
 ```
+
+A análise do modelo mostra que a variável com o maior valor p acima do nível de significância é a Administracao, logo a mesma deve ser removida.
+
+
+#### Modelo 2
+
+Neste modelo considera-se as variáveis: PeD, Marketing, e Estado.
+
 ```{r}
 regressor = lm(formula = Profit ~ Marketing + ReD + State,
                data = training_set)
 summary(regressor)
 ```
+
+Através da análise é possivel notar que a variável Estado possui o maior valor p acima do nível de significância, assim ela deve ser desconsiderada do modelo.
+
+
+#### Modelo 3
+
+Neste modelo considera-se as variáveis: PeD e Makerting.
+
 ```{r}
 regressor = lm(formula = Profit ~ Marketing + ReD,
                data = training_set)
 summary(regressor)
 ```
-Modelo em que todos os estimadores dos parâmetros foram significativos.
+
+Analisando o modelo notamos que variável Marketing possui o maior valor p acima do nível de significância, então ela deve ser removida do modelo.
+
+
+#### Modelo 4
+
+Neste modelo apenas a variável PeD é considerada.
 
 ```{r}
 regressor = lm(formula = Profit ~ ReD,
                data = training_set)
 summary(regressor)
 ```
+
+A análise do modelo mostra que a variável PeD apresenta um valor p menor que o nível de significância definido (0.05), dessa forma ela deve pertencer ao modelo.
+Assim finaliza-se o algoritmo Backward Elimination, e podemos afirmar que o modelo mais adequado é este último, composto apenas pela variável independente PeD.
+
+### Conclusão
+
+Foram construídos quatro modelos de regressão linear, no entanto, foi obtido apenas um para cujas variáveis independentes o valor p é abaixo do nível de significância definido, ou seja, apenas um único modelo válido. Desse modo, não foi necessário conduzir análises quanto ao R² e o R² Ajustado dos modelos, pois são métricas utilizadas para selecionar um modelo dentre vários válidos.
+Além disso, o estudo inicialmente tinha como objetivo encontrar um modelo de regressão linear múltipla, que fosse capaz de inferir o lucro de startups a partir de algumas variáveis. No entanto, chegou-se a conclusão que o modelo mais adequado se caracteriza como uma regresssão linear simples, cuja variável independente é referente ao gasto com Pesquisa e Desenvolvimento.
 
 ## Análise de Resíduos
 
@@ -189,7 +227,6 @@ A análise dos resíduos, consiste em validar se o modelo adotado, de fato, é a
  - **Normalidade**: Os resíduos devem seguir a distribuição normal, com média igual a 0 e variância constante.  
  - **Homogeneidade**: Os resíduos devem variar na mesma proporção. Desta forma, cada um contribui de forma igual para a soma dos quadrados.  
  - **Independência**: Um resíduo não deve influenciar o outro, essa suposição, garante que os dados foram coletados de modo aleatório no espaço amostral.
-
 
 No gráfico abaixo, vemos os valores observados, representados pelos círculos ao longo da reta, os valores estimados, indicados pelos círculos coloridos maiores, e os resíduos, que são as linhas entre os valores estimados e os observados.
 
@@ -277,6 +314,6 @@ bptest(regressor)
 
 
 ```{r}
-durbinWatsonTest(regressor)
+#durbinWatsonTest(regressor)
 ```
 
