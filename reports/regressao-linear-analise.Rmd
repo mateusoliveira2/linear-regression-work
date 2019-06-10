@@ -30,6 +30,11 @@ options(scipen = 999)
 
 dataset = read_csv(here::here("data/50_startups.csv"),
                  col_types = "dddcd")
+
+names(dataset)[names(dataset) == 'ReD'] <- 'PeD'
+names(dataset)[names(dataset) == 'Administration'] <- 'Administracao'
+names(dataset)[names(dataset) == 'State'] <- 'Estado'
+names(dataset)[names(dataset) == 'Profit'] <- 'Lucro'
 ```
 
 ## Analise Descritiva
@@ -48,9 +53,9 @@ Com base nas visualizações abaixo, podemos notar que há uma dispersão dos po
 ```{r}
 ggplot(data = dataset) +
     theme(legend.position="none")+
-    geom_point(aes(x = Administration, y = Profit, color = State)) +
-    facet_grid(State ~ .) +
-    labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de relação entre gasto com adminsitra??o e lucro")
+    geom_point(aes(x = Administracao, y = Lucro, color = Estado)) +
+    facet_grid(Estado ~ .) +
+    labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de relação entre gasto com administração e o lucro")
 ```
 
 
@@ -65,8 +70,8 @@ Observa-se pontos que fogem dos da têndencia, logo, há uma correlação consid
 ```{r}
 ggplot(data = dataset) +
     theme(legend.position="none")+
-    geom_point(aes(x = Marketing, y = Profit, color = State))+
-    facet_grid(State ~ .) +
+    geom_point(aes(x = Marketing, y = Lucro, color = Estado))+
+    facet_grid(Estado ~ .) +
     labs(x = "Marketing", y = "Lucro", title = "Marketing X Lucro", subtitle =  "Analise de relação entre gasto com marketing e lucro")
 ```
 
@@ -81,15 +86,15 @@ Com isso, esse é o setor que gera um efeito positivo mais provável no lucro da
 ```{r}
 ggplot(data = dataset) +
     theme(legend.position="none")+
-    geom_point(aes(x = ReD, y = Profit, color = State)) +
-    facet_grid(State ~ .) +
+    geom_point(aes(x = PeD, y = Lucro, color = Estado)) +
+    facet_grid(Estado ~ .) +
     labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "Análise de relação entre gasto com pesquisa & desenvolvimento e lucro")
 ```
 
 ```{r}
 ggplot(data = dataset) +
     theme(legend.position="none")+
-    geom_point(aes(x = ReD, y = Profit, color = State)) +
+    geom_point(aes(x = PeD, y = Lucro, color = Estado)) +
     labs(x = "P&D", y = "Lucro", title = "P&D X Lucro", subtitle =  "Análise de relação entre gasto com pesquisa & desenvolvimento e lucro")
 ```
 
@@ -97,7 +102,7 @@ ggplot(data = dataset) +
 ### Correlações
 
 ```{r}
-numerical_columns = dataset[c("ReD", "Profit", "Administration", "Marketing")]
+numerical_columns = dataset[c("PeD", "Lucro", "Administracao", "Marketing")]
 corrplot(cor(numerical_columns), method="color",  
          order="hclust", 
          addCoef.col = "black", 
@@ -110,8 +115,8 @@ corrplot(cor(numerical_columns), method="color",
 
 ```{r}
 ggplot(data = dataset) +
-    geom_quasirandom(aes(x = State, y = Profit, color = State, alpha = 0.3))+
-    geom_boxplot(aes(x = State, y = Profit, color = State, alpha = 0.3))+
+    geom_quasirandom(aes(x = Estado, y = Lucro, color = Estado, alpha = 0.3))+
+    geom_boxplot(aes(x = Estado, y = Lucro, color = Estado, alpha = 0.3))+
     labs(x = "", y = "Lucro", title = "Lucros por estados")
 ```
 
@@ -124,7 +129,7 @@ Antes de analisar os modelos que se adequam à problemática proposta, é necess
 A variável adaptada é a Estado, que pode assumir três valores categóricos: 'New York', 'California' e 'Florida'. Desse modo, ela foi transformada para receber respectivamente os valores 1, 2 e 3, possibilitando sua inclusão na construção do modelos.
 
 ```{r}
-dataset$State = factor(dataset$State,
+dataset$State = factor(dataset$Estado,
                        levels = c('New York', 'California', 'Florida'),
                        labels = c(1, 2, 3))
 ```
@@ -134,7 +139,7 @@ dataset$State = factor(dataset$State,
 
 ```{r}
 set.seed(100)
-split = sample.split(dataset$Profit, SplitRatio = 0.8)
+split = sample.split(dataset$Lucro, SplitRatio = 0.8)
 
 training_set = subset(dataset, split == TRUE)
 test_set = subset(dataset, split == FALSE)
@@ -156,7 +161,7 @@ A fim de encontrar o melhor modelo cuja variáveis impactam na inferência do Lu
 Neste primeiro modelo consideramos todas as variáveis independentes: Administracao, PeD, Marketing, e Estado.
 
 ```{r}
-regressor = lm(formula = Profit ~ .,
+regressor = lm(formula = Lucro ~ .,
                data = training_set)
 summary(regressor)
 ```
@@ -169,7 +174,7 @@ A análise do modelo mostra que a variável com o maior valor p acima do nível 
 Neste modelo considera-se as variáveis: PeD, Marketing, e Estado.
 
 ```{r}
-regressor = lm(formula = Profit ~ Marketing + ReD + State,
+regressor = lm(formula = Lucro ~ Marketing + PeD + Estado,
                data = training_set)
 summary(regressor)
 ```
@@ -182,7 +187,7 @@ Através da análise é possivel notar que a variável Estado possui o maior val
 Neste modelo considera-se as variáveis: PeD e Makerting.
 
 ```{r}
-regressor = lm(formula = Profit ~ Marketing + ReD,
+regressor = lm(formula = Lucro ~ Marketing + PeD,
                data = training_set)
 summary(regressor)
 ```
@@ -195,7 +200,7 @@ Analisando o modelo notamos que variável Marketing possui o maior valor p acima
 Neste modelo apenas a variável PeD é considerada.
 
 ```{r}
-regressor = lm(formula = Profit ~ ReD,
+regressor = lm(formula = Lucro ~ PeD,
                data = training_set)
 summary(regressor)
 ```
@@ -237,9 +242,9 @@ A partir dele, conseguimos visualizar a existência da relação linear entre as
 predicoes = predict(regressor)
 residuos = residuals(regressor)
 
-ggplot(training_set, aes(x = ReD, y = Profit)) +
+ggplot(training_set, aes(x = PeD, y = Lucro)) +
   geom_smooth(method = "lm", se = FALSE, color = "lightgrey") +     # regression line  
-  geom_segment(aes(xend = ReD, yend = predicoes), alpha = .2) +     # draw line from point to line
+  geom_segment(aes(xend = PeD, yend = predicoes), alpha = .2) +     # draw line from point to line
   geom_point(aes(color = abs(residuos), size = abs(residuos))) +    # size of the points
   scale_color_continuous(low = "green", high = "red") +             # colour of the points mapped to residual size - green smaller, red larger
   guides(color = FALSE, size = FALSE) +                             # size legend removed
