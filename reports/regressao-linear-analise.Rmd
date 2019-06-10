@@ -1,7 +1,7 @@
 ---
-title: ""
+title: "Quais gastos interferem no lucro de uma startup ?"
 author: "Fanny Batista Vieira, Marcus Vinícius de Farias Barbosa e Mateus de Lima Oliveira"
-date: "13 de maio de 2019"
+date: "10 de junho de 2019"
 output:
   html_document:
     code_folding: "hide"
@@ -12,9 +12,7 @@ output:
     df_print: paged
 ---
 
-## Pergunta a ser respondida: Quais gastos interferem no lucro das startups ?
-
-```{r}
+```{r results='hide', message=FALSE, warning=FALSE}
 library(tidyverse)
 library(ggbeeswarm)
 library(ggplot2)
@@ -38,16 +36,17 @@ names(dataset)[names(dataset) == 'Profit'] <- 'Lucro'
 
 ## Motivação
 
-Os dados utilizados possuem informações sobre 50 startups Temos cinco colunas que contêm informações sobre quanto essas empresas gastam em administração, pesquisa e desenvolvimento (P&D) e marketing, sua localização por estado e seu lucro no ano mais recente. Este conjunto de dados é anonimizado, o que significa que não sabemos os nomes dessas startups ou qualquer outra informação de identificação.
+Os dados utilizados possuem informações sobre 50 startups. Temos cinco colunas que contêm informações sobre quanto essas empresas gastam em administração, pesquisa e desenvolvimento (P&D) e marketing, sua localização por estado e seu lucro no ano mais recente. Este conjunto de dados é anonimizado, o que significa que não sabemos os nomes dessas startups ou qualquer outra informação de identificação.
 
-Pensamos no cenário em que seríamos contratados para analisar essas informações e criar um modelo. Precisaríamos responder ao contratante em quais departamentos da empresa deveria-se investir para se obter um maior lucro, por exemplo em administração, ou em outro O nosso empregador informou que quer tomar essa decisão com base no lucro do ano passado.
+Pensamos no cenário em que seríamos contratados para analisar essas informações e criar um modelo. Precisaríamos responder ao contratante em quais departamentos da empresa devem-se investir para se obter um maior lucro, por exemplo em administração, ou em outro setor. O nosso empregador informou que deseja tomar essa decisão com base no lucro do ano passado.
 
 Para resolver esse problema, criaremos um modelo para avaliar quais departamentos de uma startup são interessantes para se investir, a fim maximizar seu lucro.
 
+## Análise Descritiva
+
 ### Administração
 
-Com base nas visualizações abaixo, podemos notar que há uma dispersão dos pontos de forma que não se pode afirmar que há uma correlação considerável em relação ao impacto de gastos com administração no lucro da startup. Nos três estados, existem pontos que estão no mesmo nivel de lucro mesmo conforme o investimento em administração cresce.
-
+Com base nas visualizações abaixo, podemos notar que há uma dispersão dos pontos, de modo que não se pode afirmar que há uma correlação considerável entre os gastos com administração e o lucro da startup. Nos três estados, existem pontos que estão no mesmo nível de lucro mesmo com o crescimento dos gastos em administração.
 
 ```{r}
 ggplot(data = dataset) +
@@ -59,8 +58,8 @@ ggplot(data = dataset) +
 
 ### Marketing
 
-No marketing a situação difere da administração. As startups tendem a ter um maior lucro de acordo com o investimento nesse setor nos três estados, pois ao passo que o valor investido cresce, os lucros também crescem.
-Observa-se pontos que fogem dos da têndencia, logo, há uma correlação consideravel entre essas duas variáveis.
+No marketing, a situação difere da administração. As startups tendem a ter um maior lucro de acordo com o investimento nesse setor nos três estados, pois ao passo que o valor investido cresce, os lucros também crescem.
+Observa-se pontos que fogem da têndencia, logo, há uma correlação considerável entre essas duas variáveis.
 
 ```{r}
 ggplot(data = dataset) +
@@ -72,7 +71,7 @@ ggplot(data = dataset) +
 
 ### Pesquisa e Desenvolvimento
 
-Como esperado, há uma correlação quase linear em relação ao lucro e investimento em pesquisa e desenvolvimento. Não há pontos consideráveis que saiam da têndencia de crescimento linar que os pontos do gráfico seguem. 
+Como esperado, há uma correlação quase linear em relação ao lucro e o investimento em pesquisa e desenvolvimento. Não há pontos consideráveis que saiam da têndencia de crescimento linear que os pontos do gráfico seguem. 
 Com isso, esse é o setor que gera um efeito positivo mais provável no lucro das startups quando comparado com Marketing e Administração.
 
 ```{r}
@@ -121,6 +120,8 @@ A variável adaptada é a Estado, que pode assumir três valores categóricos: '
 dataset$Estado = factor(dataset$Estado,
                        levels = c('New York', 'California', 'Florida'),
                        labels = c(1, 2, 3))
+
+dataset$Estado <- as.numeric(levels(dataset$Estado)[dataset$Estado])
 ```
 
 É necessário também dividir o conjunto de dados em dois conjuntos: de treinamento e de teste. O conjunto de dados de treinamento é utilizado para construir e treinar o modelo, já o de testes é utilizado para verificar o quão acertivo é são os modelos construídos.
@@ -145,6 +146,8 @@ A fim de encontrar o melhor modelo cujas variáveis impactam na inferência do L
 3) Considera-se a variável com maior valor-p;
 4) Se o valor p é maior que o nível de significância, remove-se a variável; 
 5) Ajusta-se novamente o modelo, agora sem a variável removida.
+
+OBS: No passo 4, visto que o valor-p > nível de significância, aceita-se a hipótese Ho e pode-se afirmar que o valor estimado para a variável é estatisticamente igual a zero, logo, ela não influencia consideravelmente e pode ser descartada do modelo.
 
 #### Nível de Significância
 
@@ -173,7 +176,7 @@ regressor = lm(formula = Lucro ~ Marketing + PeD + Estado,
 summary(regressor)
 ```
 
-Através da análise é possivel notar que a variável Estado possui o maior valor-p acima do nível de significância, assim ela deve ser desconsiderada do modelo.
+Através da análise é possível notar que a variável **Estado** possui o maior valor-p acima do nível de significância, assim ela deve ser desconsiderada do modelo.
 
 
 #### Modelo 3
@@ -204,8 +207,11 @@ Assim finaliza-se o algoritmo **Backward Elimination**, e podemos afirmar que o 
 
 ### Conclusão
 
-Foram construídos quatro modelos de regressão linear, no entanto, foi obtido apenas um para cujas variáveis independentes o valor-p é abaixo do nível de significância definido, ou seja, apenas um único modelo válido. Desse modo, não foi necessário conduzir análises quanto ao R² e o R² Ajustado dos modelos, pois são métricas utilizadas para selecionar um modelo dentre vários válidos.
-Além disso, o estudo inicialmente tinha como objetivo encontrar um modelo de regressão linear múltipla, que fosse capaz de inferir o lucro de startups a partir de algumas variáveis. No entanto, chegou-se a conclusão que o modelo mais adequado se caracteriza como uma regresssão linear simples, cuja variável independente é referente ao gasto com Pesquisa e Desenvolvimento.
+Foram construídos quatro modelos de regressão linear, no entanto, foi obtido apenas um para cujas variáveis independentes o valor-p é abaixo do nível de significância definido, ou seja, apenas um único modelo satisfatório. Desse modo, não foi necessário conduzir análises quanto ao R² e o R² Ajustado dos modelos, pois são métricas utilizadas para selecionar um modelo dentre vários válidos.
+
+Além disso, o estudo inicialmente tinha como objetivo encontrar um modelo de regressão linear múltipla, que fosse capaz de inferir o lucro de startups a partir de algumas variáveis. No entanto, chegou-se a conclusão que o modelo mais adequado se caracteriza como uma regresssão linear simples, cuja variável independente é referente ao gasto com Pesquisa e Desenvolvimento (**PeD**).
+
+Por fim, o modelo obteve um coeficiente de determinação (R²) de 0.9457, ou seja, podemos afirmar que 94,57% dos dados são explicados pelo modelo.
 
 ## Análise de Resíduos
 
@@ -288,7 +294,7 @@ A partir do resultado acima, vemos que o valor-p é menor que o nível de signif
 Pelo estudado, quando os valores são muito pequenos, o coeficiente não consegue identificar bem a presença de normalidade e por isso, obtivemos esse resultado. Sendo assim, podemos afirmar que de modo geral, nossos resíduos seguem distribuição normal.
 
 
-### Teste da homogeinidade
+### Teste da homogeneidade
 
 Para verificar a homogeneidade dos resíduos, primeiro utilizamos o gráfico do tipo scale-location. Verificamos isso de duas formas:
 
@@ -319,4 +325,36 @@ Para avaliar se os dados são de fato independentes, usamos a estratégia do val
 durbinWatsonTest(regressor)
 ```
 
-## Conclusões 
+## Conclusões
+
+Como descrito nas seções acima, a base de dados foi analisada descritivamente e foram aplicadas técnicas de seleção e validação, a fim de encontrar o modelo que melhor explicasse o lucro das startups.
+
+O modelo foi o seguinte:
+
+    Lucro = 47074,2420 + 0,8724 x PeD
+
+### Explicado o modelo
+
+Dado que não há gastos no setor de **PeD**, isto é, **PeD** é igual a zero, teremos um valor fixo para o **Lucro** em **47074,2420** unidades.
+Além disso, dado cada acréscimo de uma unidade na **PeD**, teremos um acréscimo de **0,8724** unidades no **Lucro**.
+
+### Caso de uso
+
+Com o objetivo de exemplificar a utilização do modelo proposto, foram utilizados os seguintes valores para PeD:
+
+1) 190150.89
+2) 94712.60
+3) 75642.33
+
+```{r}
+caso <- data.frame(
+  PeD = c(190150.89, 94712.60, 75642.33)
+)
+```
+
+Aplicando os valores no modelo de regressão, obtemos os seguintes valores para o Lucro, respectivamente:
+
+```{r}
+predict(regressor, newdata = caso)
+```
+
