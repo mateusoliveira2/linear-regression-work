@@ -14,7 +14,6 @@ output:
 
 ## Pergunta a ser respondida: Quais gastos interferem no lucro das startups ?
 
-
 ```{r}
 library(tidyverse)
 library(ggbeeswarm)
@@ -22,7 +21,7 @@ library(ggplot2)
 library(corrplot)
 library(caTools)
 library(lmtest)
-library(car)
+#library(car)
 
 knitr::opts_chunk$set(tidy = FALSE, fig.width = 8, fig.height = 6, echo = TRUE)
 
@@ -42,7 +41,7 @@ names(dataset)[names(dataset) == 'Profit'] <- 'Lucro'
 O investimento em determinados setores pode resultar em um resultado positivo no lucro de empresas. Para verificar isso, iremos analisar dados de 50 startups de três estados americanos: Florida, California e Nova Iorque. 
 
 Vamos verificar se gastos com Administração, P&D(Pesquisa e Desenvolvimento) e Marketing tem alguma relação com o lucro da startup analisando suas correlações.
-Para melhorar o entendimento e analise individual, os gráficos  estão divididos por estado.
+Para melhorar o entendimento e analise individual, os gráficos estão divididos por estado.
 
 
 ### Administração
@@ -120,16 +119,14 @@ ggplot(data = dataset) +
     labs(x = "", y = "Lucro", title = "Lucros por estados")
 ```
 
-## Modelo de Regressão
-
-### Pré-processamento dos dados
+## Pré-processamento dos dados
 
 Antes de analisar os modelos que se adequam à problemática proposta, é necessário adaptar as variáveis que não são do tipo númerico, pois sem isto, elas não podem ser consideradas como parâmetros dos modelos de uma regressão linear.
 
 A variável adaptada é a Estado, que pode assumir três valores categóricos: 'New York', 'California' e 'Florida'. Desse modo, ela foi transformada para receber respectivamente os valores 1, 2 e 3, possibilitando sua inclusão na construção do modelos.
 
 ```{r}
-dataset$State = factor(dataset$Estado,
+dataset$Estado = factor(dataset$Estado,
                        levels = c('New York', 'California', 'Florida'),
                        labels = c(1, 2, 3))
 ```
@@ -145,20 +142,25 @@ training_set = subset(dataset, split == TRUE)
 test_set = subset(dataset, split == FALSE)
 ```
 
+## Criando o Modelo de Regressão
+
 ### Encontrando o melhor modelo
 
-A fim de encontrar o melhor modelo cuja variáveis impactam na inferência do Lucro, é utilizada a técnica Backward Elimination. Esta técnica é aplicada através dos seguintes passos:
+A fim de encontrar o melhor modelo cujas variáveis impactam na inferência do Lucro, é utilizada a técnica **Backward Elimination**. Esta técnica é aplicada através dos seguintes passos:
 
 1) Define-se o nível de significância;
 2) Ajusta-se o modelo com todas as variáveis independentes possíveis;
-3) Considera-se a variável com maior valor p;
+3) Considera-se a variável com maior valor-p;
 4) Se o valor p é maior que o nível de significância, remove-se a variável; 
 5) Ajusta-se novamente o modelo, agora sem a variável removida.
 
+#### Nível de Significância
+
+O nível de significância adotado foi de 5%.
 
 #### Modelo 1
 
-Neste primeiro modelo consideramos todas as variáveis independentes: Administracao, PeD, Marketing, e Estado.
+Neste primeiro modelo consideramos todas as variáveis independentes: **Administracao**, **PeD**, **Marketing**, e **Estado**.
 
 ```{r}
 regressor = lm(formula = Lucro ~ .,
@@ -166,12 +168,12 @@ regressor = lm(formula = Lucro ~ .,
 summary(regressor)
 ```
 
-A análise do modelo mostra que a variável com o maior valor p acima do nível de significância é a Administracao, logo a mesma deve ser removida.
+A análise do modelo mostra que a variável com o maior valor-p acima do nível de significância é a **Administracao**, logo a mesma deve ser removida.
 
 
 #### Modelo 2
 
-Neste modelo considera-se as variáveis: PeD, Marketing, e Estado.
+Neste modelo considera-se as variáveis: **PeD**, **Marketing**, e **Estado**.
 
 ```{r}
 regressor = lm(formula = Lucro ~ Marketing + PeD + Estado,
@@ -179,12 +181,12 @@ regressor = lm(formula = Lucro ~ Marketing + PeD + Estado,
 summary(regressor)
 ```
 
-Através da análise é possivel notar que a variável Estado possui o maior valor p acima do nível de significância, assim ela deve ser desconsiderada do modelo.
+Através da análise é possivel notar que a variável Estado possui o maior valor-p acima do nível de significância, assim ela deve ser desconsiderada do modelo.
 
 
 #### Modelo 3
 
-Neste modelo considera-se as variáveis: PeD e Makerting.
+Neste modelo considera-se as variáveis: **PeD** e **Marketing**.
 
 ```{r}
 regressor = lm(formula = Lucro ~ Marketing + PeD,
@@ -192,12 +194,12 @@ regressor = lm(formula = Lucro ~ Marketing + PeD,
 summary(regressor)
 ```
 
-Analisando o modelo notamos que variável Marketing possui o maior valor p acima do nível de significância, então ela deve ser removida do modelo.
+Analisando o modelo notamos que variável **Marketing** possui o maior valor-p acima do nível de significância, então ela deve ser removida do modelo.
 
 
 #### Modelo 4
 
-Neste modelo apenas a variável PeD é considerada.
+Neste modelo apenas a variável **PeD** é considerada.
 
 ```{r}
 regressor = lm(formula = Lucro ~ PeD,
@@ -205,12 +207,12 @@ regressor = lm(formula = Lucro ~ PeD,
 summary(regressor)
 ```
 
-A análise do modelo mostra que a variável PeD apresenta um valor p menor que o nível de significância definido (0.05), dessa forma ela deve pertencer ao modelo.
-Assim finaliza-se o algoritmo Backward Elimination, e podemos afirmar que o modelo mais adequado é este último, composto apenas pela variável independente PeD.
+A análise do modelo mostra que a variável **PeD** apresenta um valor-p menor que o nível de significância definido (0.05), dessa forma ela deve pertencer ao modelo.
+Assim finaliza-se o algoritmo **Backward Elimination**, e podemos afirmar que o modelo mais adequado é este último, composto apenas pela variável independente PeD.
 
 ### Conclusão
 
-Foram construídos quatro modelos de regressão linear, no entanto, foi obtido apenas um para cujas variáveis independentes o valor p é abaixo do nível de significância definido, ou seja, apenas um único modelo válido. Desse modo, não foi necessário conduzir análises quanto ao R² e o R² Ajustado dos modelos, pois são métricas utilizadas para selecionar um modelo dentre vários válidos.
+Foram construídos quatro modelos de regressão linear, no entanto, foi obtido apenas um para cujas variáveis independentes o valor-p é abaixo do nível de significância definido, ou seja, apenas um único modelo válido. Desse modo, não foi necessário conduzir análises quanto ao R² e o R² Ajustado dos modelos, pois são métricas utilizadas para selecionar um modelo dentre vários válidos.
 Além disso, o estudo inicialmente tinha como objetivo encontrar um modelo de regressão linear múltipla, que fosse capaz de inferir o lucro de startups a partir de algumas variáveis. No entanto, chegou-se a conclusão que o modelo mais adequado se caracteriza como uma regresssão linear simples, cuja variável independente é referente ao gasto com Pesquisa e Desenvolvimento.
 
 ## Análise de Resíduos
@@ -289,7 +291,7 @@ Além da visualização do gráfico qxq, também decidimos usar o gráfico de de
 
 Por fim, analisamos o teste de shapiro-wilk. Para verificar se a nossa hipótese de que os resíduos seguem distribuição normal é verdadeira, analisamos o valor p. Se ele for menor que o nosso nível de significância(nesse caso, 0.05), rejeitamos a hipotese.
 
-A partir do resultado acima, vemos que o valor p é menor que o nível de significância e portanto deveríamos rejeitá-lo. Mas algo parece estranho, pelas analises visuais nossos resíduos parecem seguir uma distribuição normal, após algumas pesquisas, percebemos que o problema é porque temos dois valores muito abaixo das outras médias(nesse caso, 0), que ocorreram quando as empresas não investiram em pesquisa e desenvolvimento. 
+A partir do resultado acima, vemos que o valor-p é menor que o nível de significância e portanto deveríamos rejeitá-lo. Mas algo parece estranho, pelas analises visuais nossos resíduos parecem seguir uma distribuição normal, após algumas pesquisas, percebemos que o problema é porque temos dois valores muito abaixo das outras médias(nesse caso, 0), que ocorreram quando as empresas não investiram em pesquisa e desenvolvimento. 
 
 Pelo estudado, quando os valores são muito pequenos, o coeficiente não consegue identificar bem a presença de normalidade e por isso, obtivemos esse resultado. Sendo assim, podemos afirmar que de modo geral, nossos resíduos seguem distribuição normal.
 
@@ -309,7 +311,7 @@ plot(regressor, which=3, col=c("blue"))  # Scale-Location Plot
 ```
 
 
-Usamos o teste de Breusch Pagan, para medir numericamente se nossa suposição está correta. Ele funciona como a estatística de teste usada anteriormente, analisando o p-valor, se ele for abaixo do nosso nível de significância, podemos rejeitar a nossa hipótese. Mas da tabela abaixo, vemos que o p-valor é maior, e portanto podemos concluir que os resíduos são homogêneos.
+Usamos o teste de Breusch Pagan, para medir numericamente se nossa suposição está correta. Ele funciona como a estatística de teste usada anteriormente, analisando o valor-p, se ele for abaixo do nosso nível de significância, podemos rejeitar a nossa hipótese. Mas da tabela abaixo, vemos que o valor-p é maior, e portanto podemos concluir que os resíduos são homogêneos.
 
 ```{r}
 bptest(regressor)
@@ -319,9 +321,9 @@ bptest(regressor)
 
 Usamos a estatística Durbin-Watson para testar a presença de autocorrelação nos resíduos. A autocorrelação significa que os um resíduo está correlacionado ao outro, ou seja, um resíduo afeta o valor do outro. Quando isso ocorre, a regressão de mínimos quadrados pode subestimar o erro padrão dos coeficientes. Os erros padrão subestimados podem fazer com que seus preditores pareçam significativos quando eles não são.
 
-Para avaliar se os nossos dados são de fato independentes, usamos a estratégia do p-valor novamente, do resultado abaixo, vemos que nosso p-valor é menor que o nível de significância adotado, demonstrando assim, que os nossos resíduos estão correlacionados, fazendo-se necessário uma adequação do modelo existente.
+Para avaliar se os nossos dados são de fato independentes, usamos a estratégia do p-valor novamente, do resultado abaixo, vemos que nosso valor-p é menor que o nível de significância adotado, demonstrando assim, que os nossos resíduos estão correlacionados, fazendo-se necessário uma adequação do modelo existente.
 
 ```{r}
-durbinWatsonTest(regressor)
+#durbinWatsonTest(regressor)
 ```
 
