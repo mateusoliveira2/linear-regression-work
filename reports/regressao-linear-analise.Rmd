@@ -333,7 +333,7 @@ O modelo foi o seguinte:
 
     Lucro = 47074,2420 + 0,8724 x PeD
 
-### Explicado o modelo
+### Explicando o modelo
 
 Dado que não há gastos no setor de **PeD**, isto é, **PeD** é igual a zero, teremos um valor fixo para o **Lucro** em **47074,2420** unidades.
 Além disso, dado cada acréscimo de uma unidade na **PeD**, teremos um acréscimo de **0,8724** unidades no **Lucro**.
