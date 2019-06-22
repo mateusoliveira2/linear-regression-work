@@ -34,6 +34,7 @@ names(dataset)[names(dataset) == 'State'] <- 'Estado'
 names(dataset)[names(dataset) == 'Profit'] <- 'Lucro'
 ```
 
+
 ## Motivação
 
 Os dados utilizados possuem informações sobre 50 startups. Temos cinco colunas que contêm informações sobre quanto essas empresas gastam em administração, pesquisa e desenvolvimento (P&D) e marketing, sua localização por estado e seu lucro no ano mais recente. Este conjunto de dados é anonimizado, o que significa que não sabemos os nomes dessas startups ou qualquer outra informação de identificação.
