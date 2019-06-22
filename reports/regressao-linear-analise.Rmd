@@ -57,6 +57,13 @@ ggplot(data = dataset) +
     labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de relação entre gasto com administração e o lucro")
 ```
 
+```{r}
+ggplot(data = dataset) +
+    theme(legend.position="none")+
+    geom_point(aes(x = Administracao, y = Lucro, color = Estado))+
+    labs(x = "Administração", y = "Lucro", title = "Administração X Lucro", subtitle =  "Analise de relação entre gasto com administração e o lucro")
+```
+
 ### Marketing
 
 No marketing, a situação difere da administração. As startups tendem a ter um maior lucro de acordo com o investimento nesse setor nos três estados, pois ao passo que o valor investido cresce, os lucros também crescem.
@@ -68,6 +75,13 @@ ggplot(data = dataset) +
     geom_point(aes(x = Marketing, y = Lucro, color = Estado))+
     facet_grid(Estado ~ .) +
     labs(x = "Marketing", y = "Lucro", title = "Marketing X Lucro", subtitle =  "Analise de relação entre gasto com marketing e lucro")
+```
+
+```{r}
+ggplot(data = dataset) +
+    theme(legend.position="none")+
+    geom_point(aes(x = Marketing, y = Lucro, color= Estado))+
+    labs(x = "Marketing", y = "Lucro", title = "Marketing X Lucro", subtitle =  "Analise de relação entre gasto com marketing e o lucro")
 ```
 
 ### Pesquisa e Desenvolvimento
