@@ -340,6 +340,26 @@ Para avaliar se os dados são de fato independentes, usamos a estratégia do val
 durbinWatsonTest(regressor)
 ```
 
+## Analisando pontos influentes
+
+```{r}
+cooksd = cooks.distance(regressor)
+cooksd
+```
+```{r}
+plot(cooksd)
+```
+
+
+```{r}
+dfbetas(regressor)
+```
+
+```{r}
+dffits(regressor)
+```
+
+
 ## Conclusões
 
 Como descrito nas seções acima, a base de dados foi analisada descritivamente e foram aplicadas técnicas de seleção e validação, a fim de encontrar o modelo que melhor explicasse o lucro das startups.
