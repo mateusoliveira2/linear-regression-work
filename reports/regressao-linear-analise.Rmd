@@ -359,6 +359,15 @@ durbinWatsonTest(regressor)
 
 ## Analisando pontos influentes
 
+Dizemos que um ponto é influente se sua exclusão da regressão causa uma mudança substancial na análise da regressão, por exemplo, nos valores ajustados ou nas estatísticas de coeficiente do modelo. Por isso, técnicas foram desenvolvidas.
+
+Exemplos:
+
+**Distância de Cook**  
+
+Mede a influência observação i sobre todos os outros valores ajustados. Consideramos que o ponto é influente, quando o valor para essa estaítica é maior que 1.
+
+
 ```{r}
 cooksd = cooks.distance(regressor)
 cooksd
@@ -367,10 +376,20 @@ cooksd
 plot(cooksd)
 ```
 
+**DFBetas**  
 
+Mede a influência da observação i sobre os coeficientes do nosso modelo de regressão linear.
+
+Um valor alto para essa medida indica que a observação i influencia na estimativa do coeficiente angular da variavél explicativa. Tipicamente, em amostras pequenas se esse valor for maior que 1, já podemos considerá-lo como um ponto influente.
 ```{r}
 dfbetas(regressor)
 ```
+
+**DFFits**  
+
+Mede a influência que a observação i tem sobre seu próprio valor. De outra maneira, informa o quanto a exclusão da observação i aumenta ou diminue o valor predito.
+
+Para amostras pequenas, um DFFits > 1, indica um ponto bastante influente.
 
 ```{r}
 dffits(regressor)
