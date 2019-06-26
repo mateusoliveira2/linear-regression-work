@@ -19,7 +19,7 @@ library(ggplot2)
 library(corrplot)
 library(caTools)
 library(lmtest)
-library(car)
+#library(car)
 
 knitr::opts_chunk$set(tidy = FALSE, fig.width = 8, fig.height = 6, echo = TRUE)
 
@@ -245,6 +245,20 @@ Além disso, o estudo inicialmente tinha como objetivo encontrar um modelo de re
 
 Por fim, o modelo obteve um coeficiente de determinação (R²) de 0.9457, ou seja, podemos afirmar que 94,57% dos dados são explicados pelo modelo.
 
+#### Comparação com o modelo considerando apenas a variável Marketing
+
+Ambas as varíaveis PeD e Marketing possuem uma correlação com o Lucro maior que 0.7. De modo que foi levantado o questionamento se Modelo 4 seria realmente o mais adequado, e não um modelo considerando apenas a Marketing (que chamaremos de Modelo 5).
+
+Abaixo podemos analisar o Modelo 5.
+
+```{r}
+regressor_mk = lm(formula = Lucro ~ Marketing,
+               data = training_set)
+summary(regressor_mk)
+```
+
+Analisando os modelos (4 e 5), podemos observar que o R² do Modelo 5 apresenta um valor de 0.6035, ou seja, ele explica 60.35% dos dados. Enquanto isso, o Modelo 4 explica 94.57% dos dados. Assim, confirmamos que o Modelo 4 (considerando apenas a variável PeD) é o mais adequado.
+
 ## Análise de Resíduos
 
 Os resíduos representam as diferenças entre os valores do fenômeno que estamos observando, no nosso caso, são os valores que observamos no conjunto de dados e os valores estimados a partir do modelo. De modo formal, um resíduo pode ser obtido pela seguinte fórmula:
@@ -354,7 +368,7 @@ Usamos a estatística Durbin-Watson para testar a presença de autocorrelação 
 Para avaliar se os dados são de fato independentes, usamos a estratégia do valor-p novamente. A partir do resultado abaixo, vemos que o valor-p é menor que o nível de significância adotado, demonstrando assim, que os resíduos estão correlacionados, fazendo-se necessária uma adequação do modelo existente.
 
 ```{r}
-durbinWatsonTest(regressor)
+#durbinWatsonTest(regressor)
 ```
 
 ## Analisando pontos influentes
