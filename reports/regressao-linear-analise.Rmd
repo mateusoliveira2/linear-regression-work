@@ -136,6 +136,8 @@ ggplot(data = dataset) +
 
 ## Pré-processamento dos dados
 
+### Adequação das variáveis
+
 Antes de analisar os modelos que se adequam à problemática proposta, é necessário adaptar as variáveis que não são do tipo númerico, pois sem isto, elas não podem ser consideradas como parâmetros dos modelos de uma regressão linear.
 
 A variável adaptada é a Estado, que pode assumir três valores categóricos: 'New York', 'California' e 'Florida'. Desse modo, ela foi transformada para receber respectivamente os valores 1, 2 e 3, possibilitando sua inclusão na construção do modelos.
@@ -148,8 +150,12 @@ dataset$Estado = factor(dataset$Estado,
 dataset$Estado <- as.numeric(levels(dataset$Estado)[dataset$Estado])
 ```
 
-É necessário também dividir o conjunto de dados em dois conjuntos: de treinamento e de teste. O conjunto de dados de treinamento é utilizado para construir e treinar o modelo, já o de testes é utilizado para verificar o quão acertivo é são os modelos construídos.
-80% dos dados foram utilizados para o conjunto de treinamento e 20% para o conjunto de teste.
+### Divisão do conjunto de dados
+
+- Conjunto de treinamento: conjunto de dados utilizados para construir o modelo. Contém exemplos conhecidos de entradas e suas saídas correspondentes, a partir dos quais o modelo 'aprenderá' o comportamento e poderá generalizá-lo para outros dados posteriormente.
+- Conjunto de teste: conjunto de dados utilizados para avaliar a performance do modelo construído.
+
+Para a análise em questão, 80% dos dados foram utilizados para o conjunto de treinamento e 20% para o conjunto de teste.
 
 ```{r}
 set.seed(100)
@@ -158,6 +164,8 @@ split = sample.split(dataset$Lucro, SplitRatio = 0.8)
 training_set = subset(dataset, split == TRUE)
 test_set = subset(dataset, split == FALSE)
 ```
+
+OBS: de acordo com o estudado, a técnica de divisão dos dados, em conjuntos de treinamento e de teste, é muito utilizada em cenários que apresentam grande quantidade de dados. Assim, ela foi utilizada aqui para fins de compreensão dos assuntos.
 
 ## Criando o Modelo de Regressão
 
@@ -381,6 +389,22 @@ O modelo foi o seguinte:
 
 Dado que não há gastos no setor de **PeD**, isto é, **PeD** é igual a zero, teremos um valor fixo para o **Lucro** em **47074,2420** unidades.
 Além disso, dado cada acréscimo de uma unidade na **PeD**, teremos um acréscimo de **0,8724** unidades no **Lucro**.
+
+### Aplicação do modelo no conjunto de teste
+
+```{r}
+test_set$Lucro_est <- predict(regressor, test_set)
+
+ggplot(test_set)+
+  aes(x = PeD)+
+  geom_point(aes(y = Lucro)) +
+  geom_line(aes(x = PeD, y = Lucro_est), color = "purple") +
+  ggtitle('Verificação do Lucro estimado para o conjunto de teste')
+```
+```{r}
+  test_set[,c("PeD", "Lucro", "Lucro_est")]
+```
+
 
 ### Caso de uso
 
