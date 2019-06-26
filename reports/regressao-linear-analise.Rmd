@@ -118,12 +118,21 @@ corrplot(cor(numerical_columns), method="color",
 
 ### Comparação de estados
 
+```{r warning=FALSE}
+ggplot(data = dataset) +
+    geom_quasirandom(aes(x = "" , y = Lucro, alpha = 0.3))+
+    geom_boxplot(aes(x = "", y = Lucro, alpha = 0.3))+
+    labs(x = "", y = "Lucro", title = "Lucros por estados")
+```
+
+
 ```{r}
 ggplot(data = dataset) +
     geom_quasirandom(aes(x = Estado, y = Lucro, color = Estado, alpha = 0.3))+
     geom_boxplot(aes(x = Estado, y = Lucro, color = Estado, alpha = 0.3))+
     labs(x = "", y = "Lucro", title = "Lucros por estados")
 ```
+
 
 ## Pré-processamento dos dados
 
