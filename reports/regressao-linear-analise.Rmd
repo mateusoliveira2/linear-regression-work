@@ -19,7 +19,7 @@ library(ggplot2)
 library(corrplot)
 library(caTools)
 library(lmtest)
-#library(car)
+library(car)
 
 knitr::opts_chunk$set(tidy = FALSE, fig.width = 8, fig.height = 6, echo = TRUE)
 
@@ -368,7 +368,7 @@ Usamos a estatística Durbin-Watson para testar a presença de autocorrelação 
 Para avaliar se os dados são de fato independentes, usamos a estratégia do valor-p novamente. A partir do resultado abaixo, vemos que o valor-p é menor que o nível de significância adotado, demonstrando assim, que os resíduos estão correlacionados, fazendo-se necessária uma adequação do modelo existente.
 
 ```{r}
-#durbinWatsonTest(regressor)
+durbinWatsonTest(regressor)
 ```
 
 ## Analisando pontos influentes
